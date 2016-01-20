@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals
+        name="hours">
+        <item quantity="zero">@string/iapps__hours</item>
+        <item quantity="one">@string/iapps__hour</item>
+        <item quantity="other">@string/iapps__hours</item>
+    </plurals>
+    <plurals
+        name="minutes">
+        <item quantity="zero">@string/iapps__minutes</item>
+        <item quantity="one">@string/iapps__minute</item>
+        <item quantity="other"> @string/iapps__minutes</item>
+    </plurals>
+    <plurals
+        name="days">
+        <item quantity="zero">@string/iapps__days</item>
+        <item quantity="one">@string/iapps__day</item>
+        <item quantity="other">@string/iapps__days</item>
+    </plurals>
+</resources>

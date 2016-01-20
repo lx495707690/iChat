@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/llReceivedMsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imgFriendAvatar"
+            android:layout_width="40dip"
+            android:layout_height="40dip"
+            android:layout_margin="10dip"
+            android:src="@drawable/usera" />
+
+        <TextView
+            android:id="@+id/tvReceivedMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:background="@drawable/chatfrom_bg_normal"
+            android:gravity="center"
+            android:maxWidth="200dip" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llSendedMsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:id="@+id/tvSendedMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:background="@drawable/chatto_bg_normal"
+            android:gravity="center"
+            android:maxWidth="200dip" />
+
+        <ImageView
+            android:id="@+id/imgMyAvatar"
+            android:layout_width="40dip"
+            android:layout_height="40dip"
+            android:layout_margin="10dip"
+            android:src="@drawable/userb" />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

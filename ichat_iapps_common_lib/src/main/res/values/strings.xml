@@ -1,0 +1,31 @@
+<resources>
+	<string name="app_name">iapps_libs</string>
+    <string name="iapps__retry">Retry</string>
+    <string name="iapps__network_error">Network Error</string>
+    <string name="iapps__no_internet">No Internet connection</string>
+    <string name="iapps__unknown_response">Failed to connect. Please try again later</string>
+    <string name="iapps__conn_timeout">We are experiencing high traffic. Sorry for the inconvenience, we should be back in few minutes</string>
+    <string name="iapps__conn_fail">Failed to connect to server</string>
+	<string name="iapps__yes">Yes</string>
+    <string name="iapps__no">No</string>
+    <string name="iapps__more">More</string>
+    <string name="iapps__done">Done</string>
+	<string name="iapps__cancel">Cancel</string>
+	<string name="iapps__required_field">Please provide:</string>
+	<string name="iapps__loading">Loading</string>
+	<string name="iapps__show_more">Show More</string>
+	<string name="iapps__no_more">No More Result</string>
+	<string name="iapps__minute">Minute</string>
+	<string name="iapps__minutes">Minutes</string>
+	<string name="iapps__hour">Hour</string>
+	<string name="iapps__hours">Hours</string>
+	<string name="iapps__day">Day</string>
+	<string name="iapps__days">Days</string>
+	<string name="iapps__open_in_browser">Browser</string>
+	<string name="iapps__refresh">Refresh</string>
+	
+    <string name="font_normal">RobotoCondensed-Regular.ttf</string>
+    <string name="font_italic">RobotoCondensed-Italic.ttf</string>
+    <string name="font_bold_italic">RobotoCondensed-BoldItalic.ttf</string>
+    <string name="font_bold">RobotoCondensed-Bold.ttf</string>
+</resources>

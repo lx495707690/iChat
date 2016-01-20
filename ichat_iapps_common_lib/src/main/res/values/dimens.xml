@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="tab_host_default_height">48dp</dimen>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+	<dimen name="slidingmenu_offset">60dp</dimen>
+    <dimen name="list_padding">10dp</dimen>
+    <dimen name="shadow_width">15dp</dimen>
+    <dimen name="progress_action_padding">8dp</dimen>
+    <dimen name="iapps__vertical_margin">7dp</dimen>
+    <dimen name="iapps__vertical_margin_big">15dp</dimen>
+    <dimen name="iapps__horizontal_margin">20dp</dimen>
+    <dimen name="iapps__horizontal_margin_small">10dp</dimen>
+    <dimen name="iapps__button_padding">20dp</dimen>
+    <dimen name="iapps__small_margin">5dp</dimen>
+</resources>

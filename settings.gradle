@@ -1,0 +1,2 @@
+include ':ichat_main', ':ichat_actionbarsherlock_lib', ':ichat_nineoldandroids_lib', ':ichat_iapps_common_lib', ':ichat_styles_lib', ':ichat_material_ripple_lib', ':ichat_circular_progress_button_lib', ':ichat_countryflags_phonenumber_lib', ':ichat_edittextvalidation_lib', ':ichat_betterpickers_lib', ':ichat_squareprogressbar_lib', ':ichat_flowlayout_lib', ':ichat_datetimepicker_lib', ':ichat_imagecropper_lib', ':chat_main', ':autobahn', ':ichat_greendao_lib', ':ichat_greendao_lib2', ':ichat_mygreendao_lib'
+include ':ichat_quickaction_lib',':ichat_mygreendao_lib'

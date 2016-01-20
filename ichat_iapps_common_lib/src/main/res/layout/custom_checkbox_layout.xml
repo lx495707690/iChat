@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/White"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/iapps__horizontal_margin"
+    tools:context="com.iapps.libs.fitnesschamp.generics.GenericAsynListActivity" >
+
+    <CheckBox
+        android:id="@+id/checkBoxList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/iapps__vertical_margin_big"
+        android:paddingTop="@dimen/iapps__vertical_margin_big" />
+
+</LinearLayout>
