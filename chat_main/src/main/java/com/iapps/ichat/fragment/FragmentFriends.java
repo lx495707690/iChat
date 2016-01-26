@@ -1,10 +1,6 @@
 package com.iapps.ichat.fragment;
 
-import android.content.ContentResolver;
-import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,22 +9,28 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.iapps.ichat.R;
-import com.iapps.ichat.adapter.SortContactsAdapter;
+import com.iapps.ichat.activity.HomeActivity;
+import com.iapps.ichat.adapter.SortFriendsAdapter;
+import com.iapps.ichat.helper.Constants;
 import com.iapps.ichat.helper.ContactsSideBar;
 import com.iapps.ichat.helper.GenericFragmentiChat;
 import com.iapps.ichat.helper.Helper;
-import com.iapps.ichat.model.BeanContact;
+import com.iapps.ichat.helper.Keys;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import me.itangqi.greendao.DBChat;
+import me.itangqi.greendao.DBFriend;
 import roboguice.inject.InjectView;
 
-public class FragmentContacts extends GenericFragmentiChat {
+public class FragmentFriends extends GenericFragmentiChat {
 	@InjectView(R.id.sbContacts)
 	private ContactsSideBar sbContacts;
 	@InjectView(R.id.tvDialog)
@@ -42,12 +44,10 @@ public class FragmentContacts extends GenericFragmentiChat {
 
 	@InjectView(R.id.LLLoading) private LinearLayout LLLoading;
 
-	private SortContactsAdapter mContactAdapter;
+	private SortFriendsAdapter mFriendAdapter;
 
 	private int lastFirstVisibleItem = -1;
-	private List<BeanContact> mSourceDataList = new ArrayList<>();
-
-
+	private List<DBFriend> mSourceDataList = new ArrayList<>();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -68,7 +68,7 @@ public class FragmentContacts extends GenericFragmentiChat {
 			@Override
 			public void onTouchingLetterChanged(String s) {
 
-				int position = mContactAdapter.getPositionForSection(s.charAt(0));
+				int position = mFriendAdapter.getPositionForSection(s.charAt(0));
 				if (position != -1) {
 					lvContacts.setSelection(position);
 				}
@@ -78,14 +78,25 @@ public class FragmentContacts extends GenericFragmentiChat {
 		lvContacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-				Toast.makeText(
-						getActivity(),
-						((BeanContact) mContactAdapter.getItem(position)).getPhoneNumbers() + "",
-						Toast.LENGTH_SHORT).show();
+				home().setFragment(new FragmentChatList());
+				home().changeTabBar(0);
+				DBFriend friend = mSourceDataList.get(position);
+
+				long dbChannelId;
+				//check if the chat already exist;  if not create a new chat;
+				List<DBChat> chatList = home().getDBManager().getChat(Constants.PRIVATE_CHANNEL_ID, friend.getFriend_userId());
+				if (chatList.size() == 0) {
+					//create new chat
+					dbChannelId = home().getDBManager().saveChat(Constants.PRIVATE_CHANNEL_ID, friend.getFriend_userId(), friend.getName(), "", "", friend.getImgUrl());
+				} else {
+					dbChannelId = chatList.get(0).getId();
+				}
+
+				home().setFragment(new FragmentChat(dbChannelId, Constants.PRIVATE_CHANNEL_ID, friend.getFriend_userId()));
+
 			}
 		});
 
-		loadContacts();
 		lvContacts.setOnScrollListener(new AbsListView.OnScrollListener() {
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -130,6 +141,47 @@ public class FragmentContacts extends GenericFragmentiChat {
 				}
 			}
 		});
+
+		home().setMessageListener(new HomeActivity.MessageReceiveListener() {
+			@Override
+			public void onReceive(String data) {
+				try {
+					mSourceDataList.clear();
+					JSONObject json = new JSONObject(data);
+					JSONArray jsonFriends = json.getJSONArray(Keys.DATA);
+					for (int i = 0; i < jsonFriends.length(); i++) {
+						String friendId = jsonFriends.getJSONObject(i).getString(Keys.USER_ID);
+						String username = jsonFriends.getJSONObject(i).getString(Keys.USER_NAME);
+						String avatar = jsonFriends.getJSONObject(i).getString(Keys.USER_AVATAR);
+						DBFriend friend = new DBFriend(null,clientId,friendId,username, avatar,"","");
+						mSourceDataList.add(friend);
+
+						//save friend
+						home().getDBManager().saveFriend(friend);
+					}
+
+					filledData();
+					mFriendAdapter = new SortFriendsAdapter(getActivity(), mSourceDataList);
+					lvContacts.setAdapter(mFriendAdapter);
+
+				} catch (Exception e) {
+
+				}
+			}
+		});
+
+		//get friend from database first.
+		List<DBFriend> list = home().getDBManager().searchDB(Constants.DB_FRIEND);
+		if(list.size() > 0){
+			mSourceDataList.clear();
+			mSourceDataList.addAll(list);
+			filledData();
+			mFriendAdapter = new SortFriendsAdapter(getActivity(), mSourceDataList);
+			lvContacts.setAdapter(mFriendAdapter);
+		}else{
+			//get friends
+			home().sendGetFriends();
+		}
 	}
 
 	private void filledData() {
@@ -143,10 +195,15 @@ public class FragmentContacts extends GenericFragmentiChat {
 				mSourceDataList.get(i).setSortLetters("#");
 			}
 		}
+
 		Collections.sort(mSourceDataList);
 	}
 
 	public int getSectionForPosition(int position) {
+
+		if(mSourceDataList.size() <= position){
+			return mSourceDataList.size() -1 ;
+		}
 		return mSourceDataList.get(position).getSortLetters().charAt(0);
 	}
 
@@ -159,94 +216,5 @@ public class FragmentContacts extends GenericFragmentiChat {
 			}
 		}
 		return -1;
-	}
-
-	public void loadContacts(){
-
-		LoadContacts lc = new LoadContacts();
-		lc.execute();
-
-	}
-
-	private class LoadContacts extends AsyncTask<String,Void, ArrayList<BeanContact>> {
-
-		@Override
-		protected ArrayList<BeanContact> doInBackground(String... params) {
-
-			ArrayList<BeanContact> contacts = new ArrayList<BeanContact>();
-			if(getActivity() == null){
-				return contacts;
-			}
-			ContentResolver cr = getActivity().getContentResolver();
-
-			String[] projection = new String[]{
-					ContactsContract.Contacts._ID,
-					ContactsContract.Contacts.DISPLAY_NAME,
-					ContactsContract.Contacts.HAS_PHONE_NUMBER
-			};
-
-			String orderBy = ContactsContract.Contacts.DISPLAY_NAME +" ASC";
-
-			Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
-					projection, null, null, orderBy);
-
-			while(cur.moveToNext()){
-				BeanContact c = null;
-
-				String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
-				String name = cur.getString(
-						cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-
-				if(!Helper.isEmpty(name)){
-					c = new BeanContact(id, name);
-				}
-				if (Integer
-						.parseInt(cur.getString(cur
-								.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
-					// Query phone here.
-					String[]projectionPhone = new String[]{
-							ContactsContract.CommonDataKinds.Phone.NUMBER
-					};
-					Cursor pCur = cr.query(
-							ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-							projectionPhone,
-							ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = ?",
-							new String[]{id}, null);
-					while (pCur.moveToNext()) {
-						// Do something with phones
-						String phoneNumber = pCur
-								.getString(pCur
-										.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-						if(phoneNumber.length() > 0 && c != null){
-							c.addPhoneNumber(phoneNumber);
-						}
-					}
-					pCur.close();
-				}
-
-				if(c != null){
-					contacts.add(c);
-				}
-			}
-			cur.close();
-			return contacts;
-		}
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			LLLoading.setVisibility(View.VISIBLE);
-		}
-
-		@Override
-		public void onPostExecute(ArrayList<BeanContact> contacts){
-			LLLoading.setVisibility(View.GONE);
-			if(contacts != null){
-				mSourceDataList = contacts;
-				filledData();
-				mContactAdapter = new SortContactsAdapter(getActivity(), mSourceDataList);
-				lvContacts.setAdapter(mContactAdapter);
-			}
-		}
 	}
 }

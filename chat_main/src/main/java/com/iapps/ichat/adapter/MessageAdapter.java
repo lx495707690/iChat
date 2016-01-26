@@ -11,16 +11,23 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.iapps.ichat.R;
+import com.iapps.ichat.helper.DBManager;
+import com.iapps.ichat.helper.UserInfoManager;
+import com.iapps.libs.helpers.BaseHelper;
+import com.iapps.libs.helpers.BaseUIHelper;
 
 import java.util.List;
 
+import me.itangqi.greendao.DBFriend;
 import me.itangqi.greendao.DBMessage;
 
 public class MessageAdapter
         extends ArrayAdapter<DBMessage> {
+    private DBManager dbManager;
 
     public MessageAdapter(Context context, List<DBMessage> objects) {
         super(context, R.layout.cell_message, objects);
+        dbManager = new DBManager(getContext());
     }
 
     @Override
@@ -50,7 +57,32 @@ public class MessageAdapter
             holder.llReceivedMsg.setVisibility(View.GONE);
             holder.llSendedMsg.setVisibility(View.VISIBLE);
             holder.tvSendedMsg.setText(message.getMessage());
+
+            if(!BaseHelper.isEmpty(UserInfoManager.getInstance(getContext()).getAvatar())){
+                BaseUIHelper.loadImageWithPlaceholderResizeThumb(getContext(), UserInfoManager.getInstance(getContext()).getAvatar(), holder.imgMyAvatar, R.drawable.default_useravatar);
+            }else{
+                holder.imgMyAvatar.setImageResource(R.drawable.default_useravatar);
+            }
+
         }else{
+
+            String friendId = message.getFromId();
+            List<DBFriend> list = dbManager.getFriendById(friendId);
+            DBFriend friend = null;
+            String imgUrl = "";
+            if(list.size() > 0){
+                friend = list.get(0);
+                imgUrl = friend.getImgUrl();
+            }else{
+                imgUrl = message.getImgUrl();
+            }
+
+            if(!BaseHelper.isEmpty(imgUrl)){
+                BaseUIHelper.loadImageWithPlaceholderResizeThumb(getContext(), imgUrl, holder.imgFriendAvatar, R.drawable.default_useravatar);
+            }else{
+                holder.imgFriendAvatar.setImageResource(R.drawable.default_useravatar);
+            }
+
             holder.llSendedMsg.setVisibility(View.GONE);
             holder.llReceivedMsg.setVisibility(View.VISIBLE);
             holder.tvReceivedMsg.setText(message.getMessage());
@@ -67,5 +99,4 @@ public class MessageAdapter
         ImageView imgFriendAvatar;
         ImageView imgMyAvatar;
     }
-
 }

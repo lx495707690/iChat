@@ -24,12 +24,14 @@ public class DBChatDao extends AbstractDao<DBChat, Long> {
     */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property ChannelId = new Property(1, String.class, "channelId", false, "CHANNEL_ID");
-        public final static Property UserId = new Property(2, String.class, "userId", false, "USER_ID");
-        public final static Property Name = new Property(3, String.class, "name", false, "NAME");
-        public final static Property Message = new Property(4, String.class, "message", false, "MESSAGE");
-        public final static Property Date = new Property(5, String.class, "date", false, "DATE");
-        public final static Property ImgUrl = new Property(6, String.class, "imgUrl", false, "IMG_URL");
+        public final static Property My_userId = new Property(1, String.class, "my_userId", false, "MY_USER_ID");
+        public final static Property ChannalId = new Property(2, String.class, "channalId", false, "CHANNAL_ID");
+        public final static Property Friend_userId = new Property(3, String.class, "friend_userId", false, "FRIEND_USER_ID");
+        public final static Property Name = new Property(4, String.class, "name", false, "NAME");
+        public final static Property Message = new Property(5, String.class, "message", false, "MESSAGE");
+        public final static Property Date = new Property(6, String.class, "date", false, "DATE");
+        public final static Property ImgUrl = new Property(7, String.class, "imgUrl", false, "IMG_URL");
+        public final static Property UnReadNum = new Property(8, String.class, "unReadNum", false, "UN_READ_NUM");
     };
 
 
@@ -46,12 +48,14 @@ public class DBChatDao extends AbstractDao<DBChat, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"DBCHAT\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
-                "\"CHANNEL_ID\" TEXT NOT NULL ," + // 1: channelId
-                "\"USER_ID\" TEXT NOT NULL ," + // 2: userId
-                "\"NAME\" TEXT NOT NULL ," + // 3: name
-                "\"MESSAGE\" TEXT NOT NULL ," + // 4: message
-                "\"DATE\" TEXT NOT NULL ," + // 5: date
-                "\"IMG_URL\" TEXT NOT NULL );"); // 6: imgUrl
+                "\"MY_USER_ID\" TEXT NOT NULL ," + // 1: my_userId
+                "\"CHANNAL_ID\" TEXT NOT NULL ," + // 2: channalId
+                "\"FRIEND_USER_ID\" TEXT NOT NULL ," + // 3: friend_userId
+                "\"NAME\" TEXT NOT NULL ," + // 4: name
+                "\"MESSAGE\" TEXT NOT NULL ," + // 5: message
+                "\"DATE\" TEXT NOT NULL ," + // 6: date
+                "\"IMG_URL\" TEXT NOT NULL ," + // 7: imgUrl
+                "\"UN_READ_NUM\" TEXT NOT NULL );"); // 8: unReadNum
     }
 
     /** Drops the underlying database table. */
@@ -69,12 +73,14 @@ public class DBChatDao extends AbstractDao<DBChat, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
-        stmt.bindString(2, entity.getChannelId());
-        stmt.bindString(3, entity.getUserId());
-        stmt.bindString(4, entity.getName());
-        stmt.bindString(5, entity.getMessage());
-        stmt.bindString(6, entity.getDate());
-        stmt.bindString(7, entity.getImgUrl());
+        stmt.bindString(2, entity.getMy_userId());
+        stmt.bindString(3, entity.getChannalId());
+        stmt.bindString(4, entity.getFriend_userId());
+        stmt.bindString(5, entity.getName());
+        stmt.bindString(6, entity.getMessage());
+        stmt.bindString(7, entity.getDate());
+        stmt.bindString(8, entity.getImgUrl());
+        stmt.bindString(9, entity.getUnReadNum());
     }
 
     /** @inheritdoc */
@@ -88,12 +94,14 @@ public class DBChatDao extends AbstractDao<DBChat, Long> {
     public DBChat readEntity(Cursor cursor, int offset) {
         DBChat entity = new DBChat( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.getString(offset + 1), // channelId
-            cursor.getString(offset + 2), // userId
-            cursor.getString(offset + 3), // name
-            cursor.getString(offset + 4), // message
-            cursor.getString(offset + 5), // date
-            cursor.getString(offset + 6) // imgUrl
+            cursor.getString(offset + 1), // my_userId
+            cursor.getString(offset + 2), // channalId
+            cursor.getString(offset + 3), // friend_userId
+            cursor.getString(offset + 4), // name
+            cursor.getString(offset + 5), // message
+            cursor.getString(offset + 6), // date
+            cursor.getString(offset + 7), // imgUrl
+            cursor.getString(offset + 8) // unReadNum
         );
         return entity;
     }
@@ -102,12 +110,14 @@ public class DBChatDao extends AbstractDao<DBChat, Long> {
     @Override
     public void readEntity(Cursor cursor, DBChat entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setChannelId(cursor.getString(offset + 1));
-        entity.setUserId(cursor.getString(offset + 2));
-        entity.setName(cursor.getString(offset + 3));
-        entity.setMessage(cursor.getString(offset + 4));
-        entity.setDate(cursor.getString(offset + 5));
-        entity.setImgUrl(cursor.getString(offset + 6));
+        entity.setMy_userId(cursor.getString(offset + 1));
+        entity.setChannalId(cursor.getString(offset + 2));
+        entity.setFriend_userId(cursor.getString(offset + 3));
+        entity.setName(cursor.getString(offset + 4));
+        entity.setMessage(cursor.getString(offset + 5));
+        entity.setDate(cursor.getString(offset + 6));
+        entity.setImgUrl(cursor.getString(offset + 7));
+        entity.setUnReadNum(cursor.getString(offset + 8));
      }
     
     /** @inheritdoc */

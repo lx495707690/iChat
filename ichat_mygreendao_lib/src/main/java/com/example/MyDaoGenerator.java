@@ -40,16 +40,17 @@ public class MyDaoGenerator {
     /**
      * Create chat Properties
      *
-     * @return DBChat entity
+     * @return DBFriend entity
      */
     private static void addFriend(Schema schema) {
         Entity chat = schema.addEntity("DBFriend");
         chat.addIdProperty().primaryKey().autoincrement();
-        chat.addStringProperty("userId").notNull();
+        chat.addStringProperty("my_userId").notNull();
+        chat.addStringProperty("friend_userId").notNull();
         chat.addStringProperty("name").notNull();
-        chat.addStringProperty("imgUrl").notNull();
-        chat.addStringProperty("phone").notNull();
-        chat.addStringProperty("address").notNull();
+        chat.addStringProperty("imgUrl");
+        chat.addStringProperty("phone");
+        chat.addStringProperty("address");
     }
 
     /**
@@ -60,12 +61,14 @@ public class MyDaoGenerator {
     private static void addChat(Schema schema) {
         Entity chat = schema.addEntity("DBChat");
         chat.addIdProperty().primaryKey().autoincrement();
-        chat.addStringProperty("channelId").notNull();
-        chat.addStringProperty("userId").notNull();
+        chat.addStringProperty("my_userId").notNull();
+        chat.addStringProperty("channalId").notNull();
+        chat.addStringProperty("friend_userId").notNull();
         chat.addStringProperty("name").notNull();
         chat.addStringProperty("message").notNull();
         chat.addStringProperty("date").notNull();
         chat.addStringProperty("imgUrl").notNull();
+        chat.addStringProperty("unReadNum").notNull();
     }
 
     /**
@@ -76,12 +79,16 @@ public class MyDaoGenerator {
     private static void addMessage(Schema schema) {
         Entity message = schema.addEntity("DBMessage");
         message.addIdProperty().primaryKey().autoincrement();
+        message.addStringProperty("my_userId").notNull();
         message.addStringProperty("message").notNull();
         message.addStringProperty("date").notNull();
         message.addStringProperty("fromId").notNull();
         message.addStringProperty("toId").notNull();
-        message.addStringProperty("channleId").notNull();
+        message.addStringProperty("channelId").notNull();
         message.addStringProperty("imgUrl").notNull();
+        message.addStringProperty("fromName").notNull();
+        message.addStringProperty("channalName").notNull();
         message.addBooleanProperty("fromMe").notNull();
+        message.addBooleanProperty("isSended").notNull();
     }
 }

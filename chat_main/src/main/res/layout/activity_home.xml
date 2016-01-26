@@ -38,7 +38,7 @@
                 android:layout_below="@id/ib_weixin"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="3dp"
-                android:text="微信"
+                android:text="信息"
                 android:textColor="#9A9A9A"
                 android:textSize="12sp" />
 
@@ -52,7 +52,8 @@
                 android:gravity="center"
                 android:text="7"
                 android:textColor="@android:color/white"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:visibility="gone"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -79,7 +80,7 @@
                 android:layout_below="@id/ib_contact_list"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="3dp"
-                android:text="通讯录"
+                android:text="好友"
                 android:textColor="#9A9A9A"
                 android:textSize="12sp" />
 
@@ -93,7 +94,8 @@
                 android:gravity="center"
                 android:text="7"
                 android:textColor="@android:color/white"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:visibility="gone"/>
         </RelativeLayout>
 
         <!--<RelativeLayout-->

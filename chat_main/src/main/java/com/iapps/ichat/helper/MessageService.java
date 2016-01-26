@@ -40,12 +40,17 @@ public class MessageService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         //receive the user's cmd
-        mCmdReceiver = new CommandReceiver();
+        if(mCmdReceiver == null){
+            mCmdReceiver = new CommandReceiver();
+        }
+
         IntentFilter filter = new IntentFilter();
-        filter.addAction(Constants.CMD_SENDMESSAGE);
+        filter.addAction(Constants.CMD_USER_TO_SERVICE);
         registerReceiver(mCmdReceiver, filter);
 
-        connectServer();
+        if(!mConnection.isConnected()){
+            connectServer();
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -54,19 +59,19 @@ public class MessageService extends Service {
             mConnection.connect(Constants.WEBSOCKET_HOST, new WebSocket.ConnectionHandler() {
                 @Override
                 public void onOpen() {
-                    sendMessageToUser(Constants.CONNECT_SUCCESSFULLY);
+                    sendCMDToUser(Constants.CMD_CONNECT, Constants.CONNECT_SUCCESSFULLY);
                 }
 
                 @Override
                 public void onClose(int code, String reason) {
-                    sendMessageToUser(Constants.CONNECT_CLOSED);
+                    sendCMDToUser(Constants.CMD_RECONNECT, Constants.CONNECT_FAILED);
                 }
 
                 @Override
                 public void onTextMessage(String payload) {
-                        sendMessageToUser(payload);
-                        //创建 notification(需要判断是否 开启APP  如果开启的话，就不需要创建notification)
-                        //sendNotification(payload);
+                    sendCMDToUser(Constants.CMD_MESSAGE, payload);
+                    //创建 notification(需要判断是否 开启APP  如果开启的话，就不需要创建notification)
+                    //sendNotification(payload);
                 }
 
                 @Override
@@ -80,16 +85,17 @@ public class MessageService extends Service {
                 }
             });
         }catch (WebSocketException e) {
-            sendMessageToUser(Constants.CONNECT_FAILED);
+            sendCMDToUser(Constants.CMD_RECONNECT, Constants.CONNECT_FAILED);
         }
     }
 
-    private void sendMessageToUser(String message){
+    private void sendCMDToUser(String cmd,String content){
 
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
-        bundle.putString(Keys.MESSAGE_DATA, message);
-        intent.setAction(Constants.CMD_RECEIVEMESSAGE);
+        bundle.putString(Keys.CONTENT, content);
+        bundle.putString(Keys.CMD, cmd);
+        intent.setAction(Constants.CMD_SERVICE_TO_USER);
         intent.putExtras(bundle);
         sendBroadcast(intent);
     }
@@ -97,10 +103,17 @@ public class MessageService extends Service {
     private class CommandReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String message = intent.getStringExtra(Keys.MESSAGE_DATA);
-            //send txt message
-            if(mConnection != null){
-                mConnection.sendTextMessage(message);
+            String cmd = intent.getStringExtra(Keys.CMD);
+            String content = intent.getStringExtra(Keys.CONTENT);
+            if(cmd.equals(Constants.CMD_RECONNECT)){
+                if(!mConnection.isConnected()){
+                    mConnection.reconnect();
+                }
+            }else{
+                //send txt message
+                if(mConnection != null){
+                    mConnection.sendTextMessage(content);
+                }
             }
         }
     }

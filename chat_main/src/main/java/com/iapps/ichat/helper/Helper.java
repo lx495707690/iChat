@@ -572,10 +572,16 @@ public class Helper
 		return  message;
 	}
 
-	public static  String generateLoginMessage(String account,String pwd){
-		String message = ("{\"cmd\":\"login\",\"account\":\""+ account +"\",\"pwd\":\""+ pwd +"\",\"avatar\":\"http://pic.baike.soso.com/p/20140404/20140404162443-1075855132.jpg\"}");
+	public static  String generateLoginMessage(String account,String pwd,String imgUrl){
+		String message = ("{\"cmd\":\"login\",\"username\":\""+ account +"\",\"userpass\":\""+ pwd +"\",\"avatar\":\""+ imgUrl +"\"}");
 		return  message;
 	}
+
+	public static  String generateGetFriendMessage(String userId){
+		String message = "{\"cmd\":\"getFriendList\",\"userId\":\""+ userId +"\"}";
+		return  message;
+	}
+
 
 	/**
 	 * 汉语拼音转换工具

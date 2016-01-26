@@ -2,7 +2,7 @@
     <string name="app_name">Chat</string>
     <string name="iapps">iApps</string>
     <string name="loading">Loading..</string>
-    <string name="invalid_account_or_password">Invalid account or password.</string>
+
 
     <string name="conn_timeout">Connection timed out. Please try again in a while</string>
     <string name="no_connection">Connection failed. Please check your internet connection</string>

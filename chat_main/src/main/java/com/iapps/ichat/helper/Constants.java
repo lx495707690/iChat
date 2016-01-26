@@ -138,23 +138,29 @@ public class Constants
 
 	// Websocket server
 	public static final String WEBSOCKET_HOST = "ws://192.168.1.129:9503";
-	public static final String CONNECT_SUCCESSFULLY = "connect_successfully";
-	public static final String CONNECT_FAILED = "connect_failed";
-	public static final String CONNECT_CLOSED = "connect_closed";
+	public static final String CONNECT_SUCCESSFULLY = "Connect to server successfully";
+	public static final String CONNECT_FAILED = "Connect to server failed";
 
-	//command
-	public static final String CMD_SENDMESSAGE = "msg_send";
-	public static final String CMD_RECEIVEMESSAGE = "msg_receive";
+	//BroadcastReceiver action
+	public static final String CMD_USER_TO_SERVICE = "cmd_user_to_service";
+	public static final String CMD_SERVICE_TO_USER = "cmd_service_to_user";
 
-	//get cmd from server
+	//cmd type
 	public static final String CMD_LOGIN = "login";
 	public static final String CMD_MESSAGE = "message";
+	public static final String CMD_FROMMESSAGE = "fromMsg";
 	public static final String CMD_CONNECT = "connect";
-
+	public static final String CMD_RECONNECT = "recoonect";
+	public static final String CMD_FRIEND_LIST = "getFriendList";
 
 	//DB
 	public static final String DB_CHAT = "db_chat";
 	public static final String DB_MESSAGE = "db_message";
 	public static final String DB_FRIEND = "db_friend";
 
+	//status code
+	public static final int LOGIN_SUCCESSFULLY = 1010;
+
+	//private channel Id
+	public static final String PRIVATE_CHANNEL_ID = "0";
 }

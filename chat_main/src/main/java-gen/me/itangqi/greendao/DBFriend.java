@@ -4,20 +4,20 @@ package me.itangqi.greendao;
 /**
  * Entity mapped to table "DBFRIEND".
  */
-public class DBFriend {
+public class DBFriend implements Comparable<DBFriend>{
 
     private Long id;
     /** Not-null value. */
-    private String userId;
+    private String my_userId;
+    /** Not-null value. */
+    private String friend_userId;
     /** Not-null value. */
     private String name;
-    /** Not-null value. */
     private String imgUrl;
-    /** Not-null value. */
     private String phone;
-    /** Not-null value. */
     private String address;
 
+    private String sortLetters;
     public DBFriend() {
     }
 
@@ -25,9 +25,10 @@ public class DBFriend {
         this.id = id;
     }
 
-    public DBFriend(Long id, String userId, String name, String imgUrl, String phone, String address) {
+    public DBFriend(Long id, String my_userId, String friend_userId, String name, String imgUrl, String phone, String address) {
         this.id = id;
-        this.userId = userId;
+        this.my_userId = my_userId;
+        this.friend_userId = friend_userId;
         this.name = name;
         this.imgUrl = imgUrl;
         this.phone = phone;
@@ -43,13 +44,23 @@ public class DBFriend {
     }
 
     /** Not-null value. */
-    public String getUserId() {
-        return userId;
+    public String getMy_userId() {
+        return my_userId;
     }
 
     /** Not-null value; ensure this value is available before it is saved to the database. */
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setMy_userId(String my_userId) {
+        this.my_userId = my_userId;
+    }
+
+    /** Not-null value. */
+    public String getFriend_userId() {
+        return friend_userId;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setFriend_userId(String friend_userId) {
+        this.friend_userId = friend_userId;
     }
 
     /** Not-null value. */
@@ -62,34 +73,39 @@ public class DBFriend {
         this.name = name;
     }
 
-    /** Not-null value. */
     public String getImgUrl() {
         return imgUrl;
     }
 
-    /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
     }
 
-    /** Not-null value. */
     public String getPhone() {
         return phone;
     }
 
-    /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setPhone(String phone) {
         this.phone = phone;
     }
 
-    /** Not-null value. */
     public String getAddress() {
         return address;
     }
 
-    /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setAddress(String address) {
         this.address = address;
     }
 
+    public String getSortLetters() {
+        return sortLetters;
+    }
+    public void setSortLetters(String sortLetters) {
+        this.sortLetters = sortLetters;
+    }
+
+    @Override
+    public int compareTo(DBFriend friend) {
+        return sortLetters.compareTo(friend.getSortLetters());
+    }
 }

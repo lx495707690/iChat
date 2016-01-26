@@ -2,7 +2,7 @@ package com.iapps.ichat.model;
 
 import java.util.ArrayList;
 
-public class BeanContact {
+public class BeanContact implements Comparable<BeanContact>{
 
     private String id;
     private String name;
@@ -58,5 +58,8 @@ public class BeanContact {
         this.sortLetters = sortLetters;
     }
 
-
+    @Override
+    public int compareTo(BeanContact contact) {
+        return sortLetters.compareTo(contact.getSortLetters());
+    }
 }

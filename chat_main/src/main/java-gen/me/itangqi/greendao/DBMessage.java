@@ -8,6 +8,8 @@ public class DBMessage {
 
     private Long id;
     /** Not-null value. */
+    private String my_userId;
+    /** Not-null value. */
     private String message;
     /** Not-null value. */
     private String date;
@@ -16,10 +18,15 @@ public class DBMessage {
     /** Not-null value. */
     private String toId;
     /** Not-null value. */
-    private String channleId;
+    private String channelId;
     /** Not-null value. */
     private String imgUrl;
+    /** Not-null value. */
+    private String fromName;
+    /** Not-null value. */
+    private String channalName;
     private boolean fromMe;
+    private boolean isSended;
 
     public DBMessage() {
     }
@@ -28,15 +35,19 @@ public class DBMessage {
         this.id = id;
     }
 
-    public DBMessage(Long id, String message, String date, String fromId, String toId, String channleId, String imgUrl, boolean fromMe) {
+    public DBMessage(Long id, String my_userId, String message, String date, String fromId, String toId, String channelId, String imgUrl, String fromName, String channalName, boolean fromMe, boolean isSended) {
         this.id = id;
+        this.my_userId = my_userId;
         this.message = message;
         this.date = date;
         this.fromId = fromId;
         this.toId = toId;
-        this.channleId = channleId;
+        this.channelId = channelId;
         this.imgUrl = imgUrl;
+        this.fromName = fromName;
+        this.channalName = channalName;
         this.fromMe = fromMe;
+        this.isSended = isSended;
     }
 
     public Long getId() {
@@ -45,6 +56,16 @@ public class DBMessage {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    /** Not-null value. */
+    public String getMy_userId() {
+        return my_userId;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setMy_userId(String my_userId) {
+        this.my_userId = my_userId;
     }
 
     /** Not-null value. */
@@ -88,13 +109,13 @@ public class DBMessage {
     }
 
     /** Not-null value. */
-    public String getChannleId() {
-        return channleId;
+    public String getChannelId() {
+        return channelId;
     }
 
     /** Not-null value; ensure this value is available before it is saved to the database. */
-    public void setChannleId(String channleId) {
-        this.channleId = channleId;
+    public void setChannelId(String channelId) {
+        this.channelId = channelId;
     }
 
     /** Not-null value. */
@@ -107,12 +128,40 @@ public class DBMessage {
         this.imgUrl = imgUrl;
     }
 
+    /** Not-null value. */
+    public String getFromName() {
+        return fromName;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setFromName(String fromName) {
+        this.fromName = fromName;
+    }
+
+    /** Not-null value. */
+    public String getChannalName() {
+        return channalName;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setChannalName(String channalName) {
+        this.channalName = channalName;
+    }
+
     public boolean getFromMe() {
         return fromMe;
     }
 
     public void setFromMe(boolean fromMe) {
         this.fromMe = fromMe;
+    }
+
+    public boolean getIsSended() {
+        return isSended;
+    }
+
+    public void setIsSended(boolean isSended) {
+        this.isSended = isSended;
     }
 
 }

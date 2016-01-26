@@ -8,9 +8,11 @@ public class DBChat {
 
     private Long id;
     /** Not-null value. */
-    private String channelId;
+    private String my_userId;
     /** Not-null value. */
-    private String userId;
+    private String channalId;
+    /** Not-null value. */
+    private String friend_userId;
     /** Not-null value. */
     private String name;
     /** Not-null value. */
@@ -19,6 +21,8 @@ public class DBChat {
     private String date;
     /** Not-null value. */
     private String imgUrl;
+    /** Not-null value. */
+    private String unReadNum;
 
     public DBChat() {
     }
@@ -27,14 +31,16 @@ public class DBChat {
         this.id = id;
     }
 
-    public DBChat(Long id, String channelId, String userId, String name, String message, String date, String imgUrl) {
+    public DBChat(Long id, String my_userId, String channalId, String friend_userId, String name, String message, String date, String imgUrl, String unReadNum) {
         this.id = id;
-        this.channelId = channelId;
-        this.userId = userId;
+        this.my_userId = my_userId;
+        this.channalId = channalId;
+        this.friend_userId = friend_userId;
         this.name = name;
         this.message = message;
         this.date = date;
         this.imgUrl = imgUrl;
+        this.unReadNum = unReadNum;
     }
 
     public Long getId() {
@@ -46,23 +52,33 @@ public class DBChat {
     }
 
     /** Not-null value. */
-    public String getChannelId() {
-        return channelId;
+    public String getMy_userId() {
+        return my_userId;
     }
 
     /** Not-null value; ensure this value is available before it is saved to the database. */
-    public void setChannelId(String channelId) {
-        this.channelId = channelId;
+    public void setMy_userId(String my_userId) {
+        this.my_userId = my_userId;
     }
 
     /** Not-null value. */
-    public String getUserId() {
-        return userId;
+    public String getChannalId() {
+        return channalId;
     }
 
     /** Not-null value; ensure this value is available before it is saved to the database. */
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setChannalId(String channalId) {
+        this.channalId = channalId;
+    }
+
+    /** Not-null value. */
+    public String getFriend_userId() {
+        return friend_userId;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setFriend_userId(String friend_userId) {
+        this.friend_userId = friend_userId;
     }
 
     /** Not-null value. */
@@ -103,6 +119,16 @@ public class DBChat {
     /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
+    }
+
+    /** Not-null value. */
+    public String getUnReadNum() {
+        return unReadNum;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setUnReadNum(String unReadNum) {
+        this.unReadNum = unReadNum;
     }
 
 }

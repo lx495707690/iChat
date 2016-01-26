@@ -1,13 +1,12 @@
 package com.iapps.ichat.activity;
 
 import android.app.NotificationManager;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -22,9 +21,11 @@ import android.widget.TextView;
 
 import com.iapps.ichat.R;
 import com.iapps.ichat.fragment.FragmentChatList;
-import com.iapps.ichat.fragment.FragmentContacts;
+import com.iapps.ichat.fragment.FragmentFriends;
+import com.iapps.ichat.fragment.FragmentProfile;
 import com.iapps.ichat.helper.Constants;
 import com.iapps.ichat.helper.Converter;
+import com.iapps.ichat.helper.DBManager;
 import com.iapps.ichat.helper.Helper;
 import com.iapps.ichat.helper.Keys;
 import com.iapps.ichat.helper.UserInfoManager;
@@ -32,18 +33,13 @@ import com.iapps.libs.generics.GenericFragmentActivity;
 import com.iapps.libs.helpers.BaseUIHelper;
 import com.iapps.libs.objects.SimpleBean;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import de.greenrobot.dao.query.Query;
-import de.greenrobot.dao.query.QueryBuilder;
 import me.itangqi.greendao.DBChat;
-import me.itangqi.greendao.DBChatDao;
-import me.itangqi.greendao.DBFriendDao;
 import me.itangqi.greendao.DBMessage;
-import me.itangqi.greendao.DBMessageDao;
-import me.itangqi.greendao.DaoMaster;
-import me.itangqi.greendao.DaoSession;
 import roboguice.inject.InjectView;
 
 
@@ -61,25 +57,17 @@ public class HomeActivity extends GenericFragmentActivity implements View.OnClic
     private ImageView ib_weixin;
     @InjectView(R.id.ib_contact_list)
     private ImageView ib_contact_list;
-//    @InjectView(R.id.ib_find)
-//    private ImageView ib_find;
     @InjectView(R.id.ib_profile)
     private ImageView ib_profile;
-
     @InjectView(R.id.re_weixin)
     private RelativeLayout re_weixin;
     @InjectView(R.id.re_contact_list)
     private RelativeLayout re_contact_list;
-//    @InjectView(R.id.re_find)
-//    private RelativeLayout re_find;
     @InjectView(R.id.re_profile)
     private RelativeLayout re_profile;
 
-    //DB
-    private SQLiteDatabase db;
-    private DaoMaster daoMaster;
-    private DaoSession daoSession;
-    private Cursor cursor;
+    private DBManager dbManager;
+    private ProgressDialog dialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,59 +77,52 @@ public class HomeActivity extends GenericFragmentActivity implements View.OnClic
     }
 
     private void init(){
-
-        //init database
-        setupDatabase();
+        //connect to server  dialog.
+        dialog = new ProgressDialog(this);
+        dialog.setMessage(getResources().getString(R.string.loading));
+        dialog.setCancelable(false);
 
         //init bottom bar
         re_weixin.setOnClickListener(this);
         re_contact_list.setOnClickListener(this);
-//        re_find.setOnClickListener(this);
         re_profile.setOnClickListener(this);
         ib_weixin.setSelected(true);
         setFragment(new FragmentChatList());
 
         //register  broadcast
-        mDataReceiver = new MessageDataReceiver();
+        if(mDataReceiver == null){
+            mDataReceiver = new MessageDataReceiver();
+        }
+
         IntentFilter filter = new IntentFilter();
-        filter.addAction(Constants.CMD_RECEIVEMESSAGE);
+        filter.addAction(Constants.CMD_SERVICE_TO_USER);
         registerReceiver(mDataReceiver, filter);
         NotificationManager m_NotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         m_NotificationManager.cancel(1989);
+
     }
 
-    private void changeTabBar(int position){
+    public void changeTabBar(int position){
         switch (position){
             case 0:
                 ib_weixin.setSelected(true);
                 ib_contact_list.setSelected(false);
-//                ib_find.setSelected(false);
                 ib_profile.setSelected(false);
                 break;
             case 1:
                 ib_weixin.setSelected(false);
                 ib_contact_list.setSelected(true);
-//                ib_find.setSelected(false);
                 ib_profile.setSelected(false);
                 break;
 
             case 2:
                 ib_weixin.setSelected(false);
                 ib_contact_list.setSelected(false);
-//                ib_find.setSelected(true);
-                ib_profile.setSelected(false);
+                ib_profile.setSelected(true);
                 break;
-
-//            case 3:
-//                ib_weixin.setSelected(false);
-//                ib_contact_list.setSelected(false);
-//                ib_find.setSelected(false);
-//                ib_profile.setSelected(true);
-//                break;
             default:
                 ib_weixin.setSelected(true);
                 ib_contact_list.setSelected(false);
-//                ib_find.setSelected(false);
                 ib_profile.setSelected(false);
                 break;
         }
@@ -158,17 +139,11 @@ public class HomeActivity extends GenericFragmentActivity implements View.OnClic
                 setFragment(new FragmentChatList());
                 break;
             case R.id.re_contact_list:
-                setFragment(new FragmentContacts());
+                setFragment(new FragmentFriends());
                 position = 1;
                 break;
-
-//            case R.id.re_find:
-//                setFragment(new FragmentContacts());
-//                position = 2;
-//                break;
-
             case R.id.re_profile:
-                setFragment(new FragmentContacts());
+                setFragment(new FragmentProfile());
                 position = 2;
                 break;
         }
@@ -217,8 +192,6 @@ public class HomeActivity extends GenericFragmentActivity implements View.OnClic
 
     @Override
     public void onBackPressed() {
-
-
         if (getSupportFragmentManager().getBackStackEntryCount() <= 1) {
             this.moveTaskToBack(true);
         }
@@ -304,10 +277,11 @@ public class HomeActivity extends GenericFragmentActivity implements View.OnClic
 
     public void sendTxtMessage(String message,String channalId,String toId){
         Intent intent = new Intent();
-        intent.setAction(Constants.CMD_SENDMESSAGE);
+        intent.setAction(Constants.CMD_USER_TO_SERVICE);
         String mClientId = UserInfoManager.getInstance(this).getClientId();
         message = Helper.generateTxtMessage(message,channalId,mClientId,toId);
-        intent.putExtra(Keys.MESSAGE_DATA, message);
+        intent.putExtra(Keys.CONTENT, message);
+        intent.putExtra(Keys.CMD, Constants.CMD_MESSAGE);
         sendBroadcast(intent);
     }
 
@@ -318,14 +292,61 @@ public class HomeActivity extends GenericFragmentActivity implements View.OnClic
 
             try {
                 Bundle bundle = intent.getExtras();
-                String data = bundle.getString(Keys.MESSAGE_DATA);
-                String clientId = UserInfoManager.getInstance(HomeActivity.this).getClientId();
-                DBMessage message = Converter.toTxtMessage(data, clientId, "", false);
-                saveMessage(message);
+                String data = bundle.getString(Keys.CONTENT);
+                String cmd = bundle.getString(Keys.CMD);
+                JSONObject json = null;
+                try {
+                    json = new JSONObject(data);
+                }catch (Exception e){
 
-                messageListener.onReceive(data);
+                }
+                if(cmd.equals(Constants.CMD_RECONNECT)){
+                    //tell service to reconnect to server
+                    dialog.show();
+                    sendReconnectMessage();
+                }else if(cmd.equals(Constants.CMD_CONNECT)){
+                    //send login cmd again
+                    sendLoginMessage();
+                }else if(json.getString(Keys.CMD).equals(Constants.CMD_LOGIN) && json.getInt(Keys.STATUS_CODE) == Constants.LOGIN_SUCCESSFULLY){
+                    dialog.dismiss();
+                }else if(json.getString(Keys.CMD).equals(Constants.CMD_LOGIN) && json.getInt(Keys.STATUS_CODE) != Constants.LOGIN_SUCCESSFULLY){
+                    dialog.dismiss();
+                    startActivity(new Intent(HomeActivity.this,LoginActivity.class));
+                    finish();
+                }else if(json.getString(Keys.CMD).equals(Constants.CMD_FRIEND_LIST)){
+                    messageListener.onReceive(data);
+                }else if(json.getString(Keys.CMD).equals(Constants.CMD_FROMMESSAGE)){
+
+                    String clientId = UserInfoManager.getInstance(HomeActivity.this).getClientId();
+                    DBMessage message = Converter.toTxtMessage(data,clientId,false,true);
+
+                    //create or update chat data
+                    updateChatData(message);
+
+                    dbManager.saveMessage(message);
+                    messageListener.onReceive(data);
+                }
             } catch (Exception e) {
             }
+        }
+    }
+
+    private void updateChatData(DBMessage message){
+        List<DBChat> list = dbManager.getChat(message.getChannelId(), message.getFromId());
+        if(list.size() == 0){
+            // create new chat
+            if(message.getChannelId().equals(Constants.PRIVATE_CHANNEL_ID)){
+                //private chat
+                dbManager.saveChat(message.getChannelId(), message.getFromId(), message.getFromName(), message.getMessage(), message.getDate(), message.getImgUrl());
+            }else{
+                //group chat
+                dbManager.saveChat(message.getChannelId(), message.getFromId(), message.getChannalName(), message.getMessage(), message.getDate(), "");
+            }
+        }else{
+            //update chat: message and date;
+            dbManager.updateChat(list.get(0).getId(), list.get(0).getChannalId(), list.get(0).getFriend_userId(), list.get(0).getName(),
+                    message.getMessage(),
+                    message.getDate(), message.getImgUrl());
         }
     }
 
@@ -355,98 +376,52 @@ public class HomeActivity extends GenericFragmentActivity implements View.OnClic
         main_bottom.setVisibility(View.GONE);
     }
 
-    private void setupDatabase() {
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "notes-db", null);
-        db = helper.getWritableDatabase();
-        daoMaster = new DaoMaster(db);
-        daoSession = daoMaster.newSession();
-        getDBChatDao();
-
-        String textColumn = DBChatDao.Properties.Message.columnName;
-        String orderBy = textColumn + " COLLATE LOCALIZED ASC";
-        cursor = db.query(getDBChatDao().getTablename(), getDBChatDao().getAllColumns(), null, null, null, null, orderBy);
-
+    public void sendGetFriends(){
+        Intent intent = new Intent();
+        intent.setAction(Constants.CMD_USER_TO_SERVICE);
+        intent.putExtra(Keys.CMD, Constants.CMD_MESSAGE);
+        UserInfoManager userInfoManager = UserInfoManager.getInstance(this);
+        String message = Helper.generateGetFriendMessage(userInfoManager.getClientId());
+        intent.putExtra(Keys.CONTENT, message);
+        sendBroadcast(intent);
     }
 
-    //add chat record
-    public void saveChat(String channelId, String userId, String name, String message, String date, String imgUrl) {
-        DBChat chat = new DBChat(null,channelId,userId,name,message,date,imgUrl);
-        getDBChatDao().insert(chat);
-        cursor.requery();
+    public void sendReconnectMessage(){
+        Intent intent = new Intent();
+        intent.setAction(Constants.CMD_USER_TO_SERVICE);
+        intent.putExtra(Keys.CMD, Constants.CMD_RECONNECT);
+        intent.putExtra(Keys.CONTENT, "");
+        sendBroadcast(intent);
     }
 
-    //add message record
-    public void saveMessage(DBMessage message) {
-        getDBMessageDao().insert(message);
-        cursor.requery();
+    public void sendLoginMessage(){
+        Intent intent = new Intent();
+        intent.setAction(Constants.CMD_USER_TO_SERVICE);
+        UserInfoManager userInfoManager = UserInfoManager.getInstance(this);
+        String message = Helper.generateLoginMessage(userInfoManager.getAccount(), userInfoManager.getPWD(), userInfoManager.getAvatar());
+        intent.putExtra(Keys.CMD, Constants.CMD_MESSAGE);
+        intent.putExtra(Keys.CONTENT, message);
+        sendBroadcast(intent);
     }
 
-    //search record
-    public List searchDB(int limit,int offset,String table) {
-        Query query = null;
-        if(table.equals(Constants.DB_CHAT)){
-            query = getDBChatDao().queryBuilder()
-                    .orderDesc(DBChatDao.Properties.Date)
-                    .build();
-        }else if(table.equals(Constants.DB_MESSAGE)){
-            query = getDBMessageDao().queryBuilder()
-                    .orderDesc(DBMessageDao.Properties.Id)
-                    .offset(offset)
-                    .limit(limit)
-                    .build();
-        }else if(table.equals(Constants.DB_FRIEND)){
-            query = getDBFriendDao().queryBuilder()
-                    .orderDesc(DBFriendDao.Properties.Id)
-                    .limit(limit)
-                    .build();
+    public DBManager getDBManager(){
+        if(dbManager == null){
+            dbManager = new DBManager(this);
         }
-        List results = query.list();
-        return  results;
+        return dbManager;
     }
 
-    //message record
-    public List getMessageRecord(int limit,int offset,String myId,String friendId,String channalId) {
-        Query query = null;
-        if(channalId.equals("0")){
-            QueryBuilder qb = getDBMessageDao().queryBuilder();
-            qb.where(qb.or(qb.and(DBMessageDao.Properties.FromId.eq(myId), DBMessageDao.Properties.ToId.eq(friendId)),
-                    qb.and(DBMessageDao.Properties.FromId.eq(friendId), DBMessageDao.Properties.ToId.eq(myId))))
-                    .orderDesc(DBMessageDao.Properties.Id)
-                    .offset(offset)
-                    .limit(limit);
-            query = qb.build();
-        }else{
-            query = getDBMessageDao().queryBuilder()
-                    .orderDesc(DBMessageDao.Properties.Id)
-                    .where(DBMessageDao.Properties.ChannleId.eq(channalId))
-                    .offset(offset)
-                    .limit(limit)
-                    .build();
-        }
-        List results = query.list();
-        return  results;
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mDataReceiver);
     }
 
-    //delete record
-    public void deleteDB(long id,String table){
-        if(table.equals(Constants.DB_CHAT)){
-            getDBChatDao().deleteByKey(id);
-        }else if(table.equals(Constants.DB_MESSAGE)){
-            getDBMessageDao().deleteByKey(id);
-        }
-//        getNoteDao().deleteAll();
-        cursor.requery();
-    }
-
-    private DBChatDao getDBChatDao() {
-        return daoSession.getDBChatDao();
-    }
-
-    private DBMessageDao getDBMessageDao() {
-        return daoSession.getDBMessageDao();
-    }
-
-    private DBFriendDao getDBFriendDao() {
-        return daoSession.getDBFriendDao();
+    public void logout(){
+//        UserInfoManager.getInstance(this).logout();
+////        clearFragment();
+//        finish();
+//        startActivity(new Intent(HomeActivity.this, LoginActivity.class));
+        finish();
     }
 }

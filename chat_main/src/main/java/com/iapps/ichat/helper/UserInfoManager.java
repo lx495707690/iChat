@@ -13,6 +13,9 @@ public class UserInfoManager {
 
 
 	private final String KEY_CLIENT_ID = "client_id";
+	private final String KEY_ACCOUNT = "account";
+	private final String KEY_PWD = "pwd";
+	private final String KEY_AVATAR = "avatar";
 
 	private static com.iapps.ichat.helper.UserInfoManager _userInfo = null;
 	private static String FILE_NAME = "isan_user_sec";
@@ -20,6 +23,9 @@ public class UserInfoManager {
 	private String accountId;
 	private String clientId;
 	private String countryCode;
+	private String account;
+	private String pwd;
+	private String avatar;
 
 	private SharedPreferences prefs;
 	private SecureProxy security;
@@ -79,8 +85,18 @@ public class UserInfoManager {
 		editor.commit();
 	}
 
+	public void saveUserInfo(String id,String account,String pwd,String imgAvatar) {
+		clientId = id;
+		SharedPreferences.Editor editor = this.prefs.edit();
+		editor.putString(KEY_CLIENT_ID, clientId);
+		editor.putString(KEY_ACCOUNT, account);
+		editor.putString(KEY_PWD, pwd);
+		editor.putString(KEY_AVATAR, imgAvatar);
+
+		editor.commit();
+	}
+
 	public void saveClientId(String id) {
-//		clientId = encryptText(id);
 		clientId = id;
 		SharedPreferences.Editor editor = this.prefs.edit();
 		editor.putString(KEY_CLIENT_ID, clientId);
@@ -93,6 +109,29 @@ public class UserInfoManager {
 		}
 //		return decryptText(clientId);
 		return clientId;
+	}
+
+	public String getAccount() {
+		if (account == null) {
+			this.account = this.prefs.getString(KEY_ACCOUNT, null);
+		}
+		return account;
+	}
+
+	public String getPWD() {
+		if (pwd == null) {
+			this.pwd = this.prefs.getString(KEY_PWD, null);
+		}
+//		return decryptText(clientId);
+		return pwd;
+	}
+
+	public String getAvatar() {
+		if (avatar == null) {
+			this.avatar = this.prefs.getString(KEY_AVATAR, null);
+		}
+//		return decryptText(clientId);
+		return avatar;
 	}
 
 	public String getAuthToken() {
