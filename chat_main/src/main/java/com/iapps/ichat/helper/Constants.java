@@ -142,16 +142,18 @@ public class Constants
 	public static final String CONNECT_FAILED = "Connect to server failed";
 
 	//BroadcastReceiver action
-	public static final String CMD_USER_TO_SERVICE = "cmd_user_to_service";
-	public static final String CMD_SERVICE_TO_USER = "cmd_service_to_user";
+	public static final String CMD_TO_SERVICE = "cmd_user_to_service";
+	public static final String CMD_TO_USER = "cmd_service_to_user";
 
 	//cmd type
 	public static final String CMD_LOGIN = "login";
 	public static final String CMD_MESSAGE = "message";
 	public static final String CMD_FROMMESSAGE = "fromMsg";
 	public static final String CMD_CONNECT = "connect";
-	public static final String CMD_RECONNECT = "recoonect";
+	public static final String CMD_RECONNECT = "reconnect";
+	public static final String CMD_DISCONNECT = "disconnect";
 	public static final String CMD_FRIEND_LIST = "getFriendList";
+	public static final String CMD_CREATE_GROUP = "createGroup";
 
 	//DB
 	public static final String DB_CHAT = "db_chat";
@@ -160,7 +162,11 @@ public class Constants
 
 	//status code
 	public static final int LOGIN_SUCCESSFULLY = 1010;
+	public static final int CREATE_GROUP_SUCCESSFULLY = 1030;
 
 	//private channel Id
 	public static final String PRIVATE_CHANNEL_ID = "0";
+	//group user Id
+	public static final String GROUP_USER_ID = "0";
+
 }

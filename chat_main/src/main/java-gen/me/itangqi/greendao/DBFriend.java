@@ -16,8 +16,8 @@ public class DBFriend implements Comparable<DBFriend>{
     private String imgUrl;
     private String phone;
     private String address;
-
     private String sortLetters;
+    private boolean isSelected = false;
     public DBFriend() {
     }
 
@@ -102,6 +102,13 @@ public class DBFriend implements Comparable<DBFriend>{
     }
     public void setSortLetters(String sortLetters) {
         this.sortLetters = sortLetters;
+    }
+
+    public boolean getIsSelected() {
+        return isSelected;
+    }
+    public void setIsSelected(boolean isSelected) {
+        this.isSelected = isSelected;
     }
 
     @Override

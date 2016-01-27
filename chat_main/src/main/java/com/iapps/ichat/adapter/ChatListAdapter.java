@@ -5,7 +5,7 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,14 +23,31 @@ import me.itangqi.greendao.DBChat;
 import me.itangqi.greendao.DBFriend;
 
 public class ChatListAdapter
-        extends ArrayAdapter<DBChat> {
+        extends BaseAdapter {
 
     private DBManager dbManager;
+    private List<DBChat> objects;
+    private Context ctx;
 
     public ChatListAdapter(Context context, List<DBChat> objects) {
-        super(context, R.layout.cell_chat, objects);
+        this.objects = objects;
+        dbManager = new DBManager(context);
+        this.ctx = context;
+    }
 
-        dbManager = new DBManager(getContext());
+    @Override
+    public int getCount() {
+        return objects.size();
+    }
+
+    @Override
+    public Object getItem(int i) {
+        return objects.get(i);
+    }
+
+    @Override
+    public long getItemId(int i) {
+        return 0;
     }
 
     @Override
@@ -38,8 +55,8 @@ public class ChatListAdapter
         ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
-            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            final Context contextThemeWrapper = new ContextThemeWrapper(getContext(), R.style.Theme_Themeisanagent);
+            LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            final Context contextThemeWrapper = new ContextThemeWrapper(ctx, R.style.Theme_Themeisanagent);
             LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
             convertView = localInflater.inflate(R.layout.cell_chat, parent, false);
             holder.tvName = (TextView) convertView.findViewById(R.id.tvName);
@@ -51,11 +68,13 @@ public class ChatListAdapter
             holder = (ViewHolder) convertView.getTag();
         }
 
-        DBChat chat = getItem(position);
+        DBChat chat = objects.get(position);
         holder.tvName.setText(chat.getName());
         holder.tvMessage.setText(chat.getMessage());
         if(!Helper.isEmpty(chat.getDate())){
             holder.tvDate.setText(BaseHelper.calcTimeDiff(new Date(chat.getDate())));
+        }else{
+            holder.tvDate.setText("");
         }
 
         if(chat.getChannalId().equals(Constants.PRIVATE_CHANNEL_ID)){
@@ -72,7 +91,7 @@ public class ChatListAdapter
             }
 
             if(!BaseHelper.isEmpty(imgUrl)){
-                BaseUIHelper.loadImageWithPlaceholderResizeThumb(getContext(), imgUrl, holder.imgAvatar, R.drawable.default_useravatar);
+                BaseUIHelper.loadImageWithPlaceholderResizeThumb(ctx, imgUrl, holder.imgAvatar, R.drawable.default_useravatar);
             }else{
                 holder.imgAvatar.setImageResource(R.drawable.default_useravatar);
             }

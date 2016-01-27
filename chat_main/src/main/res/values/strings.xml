@@ -8,4 +8,7 @@
     <string name="no_connection">Connection failed. Please check your internet connection</string>
     <string name="alert_no_phone">No phone number</string>
     <string name="call">Call</string>
+
+    <string name="create_group">Create group</string>
+    <string name="group_name">Group name</string>
 </resources>

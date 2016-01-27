@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.iapps.ichat.R;
 import com.iapps.ichat.adapter.AvatarAdapter;
+import com.iapps.ichat.helper.BroadcastManager;
 import com.iapps.ichat.helper.Constants;
 import com.iapps.ichat.helper.Helper;
 import com.iapps.ichat.helper.Keys;
@@ -55,6 +56,7 @@ public class LoginActivity extends GenericFragmentActivity {
     private MessageDataReceiver mDataReceiver;
     private List<String> avatarUrls = new ArrayList<>();
     private String mSelectedAvatar = "";
+    private boolean isExit = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +72,6 @@ public class LoginActivity extends GenericFragmentActivity {
     private void init(){
         dialog = new ProgressDialog(this);
         dialog.setMessage(getResources().getString(R.string.loading));
-        dialog.setCancelable(false);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,7 +88,7 @@ public class LoginActivity extends GenericFragmentActivity {
 
                 if (mForm.validate()) {
                     //send login cmd
-                    sendLoginMessage(edtAccount.getText().toString(),edtPwd.getText().toString());
+                    BroadcastManager.sendLoginMessage(LoginActivity.this,edtAccount.getText().toString(), edtPwd.getText().toString(),mSelectedAvatar);
                     dialog.show();
                 }
             }
@@ -112,7 +113,7 @@ public class LoginActivity extends GenericFragmentActivity {
         //register  broadcast
         mDataReceiver = new MessageDataReceiver();
         IntentFilter filter = new IntentFilter();
-        filter.addAction(Constants.CMD_SERVICE_TO_USER);
+        filter.addAction(Constants.CMD_TO_USER);
         registerReceiver(mDataReceiver, filter);
     }
 
@@ -126,10 +127,11 @@ public class LoginActivity extends GenericFragmentActivity {
                 String data = bundle.getString(Keys.CONTENT);
                 String cmd = bundle.getString(Keys.CMD);
                 if(cmd.equals(Constants.CMD_CONNECT)){ //connect server successfully.
+                    dialog.dismiss();
                     btnLogin.setEnabled(true);
                 }else if(cmd.equals(Constants.CMD_RECONNECT)){
-                    dialog.dismiss();
-                    Helper.showAlert(LoginActivity.this, data);
+                    dialog.show();
+                    BroadcastManager.sendReconnectMessage(LoginActivity.this);
                     btnLogin.setEnabled(false);
                 }else{
                     JSONObject json = new JSONObject(data);
@@ -138,6 +140,7 @@ public class LoginActivity extends GenericFragmentActivity {
                         UserInfoManager userInfoManager = UserInfoManager.getInstance(LoginActivity.this);
                         userInfoManager.saveUserInfo(clientId, edtAccount.getText().toString(), edtPwd.getText().toString(), mSelectedAvatar);
                         dialog.dismiss();
+                        isExit = false;
                         finish();
                         startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                     }else{
@@ -148,15 +151,6 @@ public class LoginActivity extends GenericFragmentActivity {
             } catch (Exception e) {
             }
         }
-    }
-
-    public void sendLoginMessage(String account,String pwd){
-        Intent intent = new Intent();
-        intent.setAction(Constants.CMD_USER_TO_SERVICE);
-        String message = Helper.generateLoginMessage(account, pwd, mSelectedAvatar);
-        intent.putExtra(Keys.CONTENT, message);
-        intent.putExtra(Keys.CMD, Constants.CMD_MESSAGE);
-        sendBroadcast(intent);
     }
 
     private void showAvatarDialog(){
@@ -208,11 +202,9 @@ public class LoginActivity extends GenericFragmentActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(mDataReceiver);
-    }
 
-    @Override
-    public void onBackPressed() {
-        this.finish();
-        super.onBackPressed();
+        if(isExit){
+            stopService(new Intent(this,MessageService.class));
+        }
     }
 }

@@ -6,7 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.iapps.ichat.R;
 import com.iapps.ichat.activity.HomeActivity;
 import com.iapps.ichat.adapter.ChatListAdapter;
@@ -29,7 +33,28 @@ public class FragmentChatList
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		setHasOptionsMenu(true);
 		return inflater.inflate(R.layout.fragment_chat_list, container, false);
+
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.menu_chat_list, menu);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.menu_create_group:
+				FragmentFriends f = new FragmentFriends();
+				f.setSelectFriend(true);
+				home().setFragment(f);
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
 	}
 
 	@Override
@@ -40,40 +65,35 @@ public class FragmentChatList
 		init();
 	}
 	private void init(){
-		mChatList.clear();
 
-		//get data from database.
-		List<DBChat> list = home().getDBManager().searchDB(Constants.DB_CHAT);
-		if(list != null){
-			if(list.size() > 0){
-				mChatList.addAll(list);
-			}
-		}
-
+		updateChatData();
 		mChatAdapter = new ChatListAdapter(getActivity(),mChatList);
 		lvChat.setAdapter(mChatAdapter);
 
 		lvChat.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-				home().setFragment(new FragmentChat(mChatList.get(i).getId(), mChatList.get(i).getChannalId(), mChatList.get(i).getFriend_userId()));
+				home().setFragment(new FragmentChat(mChatList.get(i).getId(), mChatList.get(i).getChannalId(), mChatList.get(i).getFriend_userId(),mChatList.get(i).getName()));
 			}
 		});
 
 		home().setMessageListener(new HomeActivity.MessageReceiveListener() {
 			@Override
-			public void onReceive(String data) {
-				try {
-					updateChatUI();
-				} catch (Exception e) {
+			public void onReceive(String cmd,String data) {
 
+				if(cmd.equals(Constants.CMD_FROMMESSAGE)){
+					try {
+						updateChatData();
+						mChatAdapter.notifyDataSetChanged();
+					} catch (Exception e) {
+						Toast.makeText(getActivity(), e.getMessage().toString(), Toast.LENGTH_SHORT).show();
+					}
 				}
 			}
 		});
 	}
 
-	private void updateChatUI(){
-
+	private void updateChatData(){
 		mChatList.clear();
 		//get data from database.
 		List<DBChat> list = home().getDBManager().searchDB(Constants.DB_CHAT);
@@ -82,6 +102,5 @@ public class FragmentChatList
 				mChatList.addAll(list);
 			}
 		}
-		mChatAdapter.notifyDataSetChanged();
 	}
 }

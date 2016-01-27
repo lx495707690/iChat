@@ -40,8 +40,8 @@ public class DBManager {
     }
 
     //add chat record
-    public long saveChat(String channelId, String userId, String name, String message, String date, String imgUrl) {
-        DBChat chat = new DBChat(null,UserInfoManager.getInstance(ctx).getClientId(),channelId,userId,name,message,date,imgUrl,"0");
+    public long saveChat(DBChat chat) {
+//        DBChat chat = new DBChat(null,UserInfoManager.getInstance(ctx).getClientId(),channelId,userId,name,message,date,imgUrl,"0");
         long id = getDBChatDao().insert(chat);
         cursor.requery();
         return id;

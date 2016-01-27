@@ -1,6 +1,6 @@
 package com.iapps.ichat.activity;
 
-import android.app.NotificationManager;
+import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,15 +18,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.iapps.ichat.R;
 import com.iapps.ichat.fragment.FragmentChatList;
 import com.iapps.ichat.fragment.FragmentFriends;
 import com.iapps.ichat.fragment.FragmentProfile;
+import com.iapps.ichat.helper.BroadcastManager;
 import com.iapps.ichat.helper.Constants;
 import com.iapps.ichat.helper.Converter;
 import com.iapps.ichat.helper.DBManager;
-import com.iapps.ichat.helper.Helper;
 import com.iapps.ichat.helper.Keys;
 import com.iapps.ichat.helper.UserInfoManager;
 import com.iapps.libs.generics.GenericFragmentActivity;
@@ -43,7 +44,7 @@ import me.itangqi.greendao.DBMessage;
 import roboguice.inject.InjectView;
 
 
-public class HomeActivity extends GenericFragmentActivity implements View.OnClickListener{
+public class HomeActivity extends GenericFragmentActivity implements View.OnClickListener {
 
     private ArrayList<? extends SimpleBean> mResults = new ArrayList<SimpleBean>();
     private boolean isResultChanged;
@@ -68,6 +69,7 @@ public class HomeActivity extends GenericFragmentActivity implements View.OnClic
 
     private DBManager dbManager;
     private ProgressDialog dialog;
+    private boolean isActive = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,7 +78,7 @@ public class HomeActivity extends GenericFragmentActivity implements View.OnClic
         init();
     }
 
-    private void init(){
+    private void init() {
         //connect to server  dialog.
         dialog = new ProgressDialog(this);
         dialog.setMessage(getResources().getString(R.string.loading));
@@ -90,20 +92,17 @@ public class HomeActivity extends GenericFragmentActivity implements View.OnClic
         setFragment(new FragmentChatList());
 
         //register  broadcast
-        if(mDataReceiver == null){
+        if (mDataReceiver == null) {
             mDataReceiver = new MessageDataReceiver();
         }
 
         IntentFilter filter = new IntentFilter();
-        filter.addAction(Constants.CMD_SERVICE_TO_USER);
+        filter.addAction(Constants.CMD_TO_USER);
         registerReceiver(mDataReceiver, filter);
-        NotificationManager m_NotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        m_NotificationManager.cancel(1989);
-
     }
 
-    public void changeTabBar(int position){
-        switch (position){
+    public void changeTabBar(int position) {
+        switch (position) {
             case 0:
                 ib_weixin.setSelected(true);
                 ib_contact_list.setSelected(false);
@@ -131,15 +130,17 @@ public class HomeActivity extends GenericFragmentActivity implements View.OnClic
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        int position  = 0;
+        int position = 0;
         clearFragment();
-        switch (id){
+        switch (id) {
             case R.id.re_weixin:
                 position = 0;
                 setFragment(new FragmentChatList());
                 break;
             case R.id.re_contact_list:
-                setFragment(new FragmentFriends());
+                FragmentFriends f = new FragmentFriends();
+                f.setSelectFriend(false);
+                setFragment(f);
                 position = 1;
                 break;
             case R.id.re_profile:
@@ -152,14 +153,14 @@ public class HomeActivity extends GenericFragmentActivity implements View.OnClic
     }
 
 
-    public void setActionBar(String Title){
+    public void setActionBar(String Title) {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#333333")));
         setSupportProgressBarIndeterminateVisibility(false);
 
         int titleId = Resources.getSystem().getIdentifier("action_bar_title", "id", "android");
-        TextView actionTitle = (TextView)findViewById(titleId);
+        TextView actionTitle = (TextView) findViewById(titleId);
         getSupportActionBar().setTitle(Html.fromHtml("<font color='#FFFFFF'>" + Title + "</font>"));
         actionTitle.setTextAppearance(this, android.R.style.TextAppearance_Large);
     }
@@ -194,8 +195,7 @@ public class HomeActivity extends GenericFragmentActivity implements View.OnClic
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() <= 1) {
             this.moveTaskToBack(true);
-        }
-        else {
+        } else {
             super.onBackPressed();
         }
 
@@ -227,7 +227,7 @@ public class HomeActivity extends GenericFragmentActivity implements View.OnClic
         getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
-    public Fragment getCurrentFragment(){
+    public Fragment getCurrentFragment() {
         Fragment f = getSupportFragmentManager().findFragmentById(R.id.layoutFragment);
         return f;
     }
@@ -259,7 +259,7 @@ public class HomeActivity extends GenericFragmentActivity implements View.OnClic
         return null;
     }
 
-   /**
+    /**
      * Clear all fragments in the backstack, except the bottom of the stack
      */
     public void reloadFirst() {
@@ -275,16 +275,7 @@ public class HomeActivity extends GenericFragmentActivity implements View.OnClic
         }
     }
 
-    public void sendTxtMessage(String message,String channalId,String toId){
-        Intent intent = new Intent();
-        intent.setAction(Constants.CMD_USER_TO_SERVICE);
-        String mClientId = UserInfoManager.getInstance(this).getClientId();
-        message = Helper.generateTxtMessage(message,channalId,mClientId,toId);
-        intent.putExtra(Keys.CONTENT, message);
-        intent.putExtra(Keys.CMD, Constants.CMD_MESSAGE);
-        sendBroadcast(intent);
-    }
-
+    //receive the command or message from the MessageService.
     private class MessageDataReceiver extends BroadcastReceiver {
 
         @Override
@@ -297,52 +288,56 @@ public class HomeActivity extends GenericFragmentActivity implements View.OnClic
                 JSONObject json = null;
                 try {
                     json = new JSONObject(data);
-                }catch (Exception e){
-
+                } catch (Exception e) {
                 }
-                if(cmd.equals(Constants.CMD_RECONNECT)){
-                    //tell service to reconnect to server
-                    dialog.show();
-                    sendReconnectMessage();
-                }else if(cmd.equals(Constants.CMD_CONNECT)){
+                if (cmd.equals(Constants.CMD_RECONNECT)) {  //need  reconnect to server
+                    if(isActive){
+                        //reconnect to server
+                        dialog.show();
+                        BroadcastManager.sendReconnectMessage(HomeActivity.this);
+                    }
+                } else if (cmd.equals(Constants.CMD_CONNECT)) { //connect successfully.
                     //send login cmd again
-                    sendLoginMessage();
-                }else if(json.getString(Keys.CMD).equals(Constants.CMD_LOGIN) && json.getInt(Keys.STATUS_CODE) == Constants.LOGIN_SUCCESSFULLY){
+                    BroadcastManager.sendLoginMessage(HomeActivity.this, UserInfoManager.getInstance(HomeActivity.this).getAccount(), UserInfoManager.getInstance(HomeActivity.this).getPWD(), UserInfoManager.getInstance(HomeActivity.this).getAvatar());
+                } else if (json.getString(Keys.CMD).equals(Constants.CMD_LOGIN) && json.getInt(Keys.STATUS_CODE) == Constants.LOGIN_SUCCESSFULLY) {
                     dialog.dismiss();
-                }else if(json.getString(Keys.CMD).equals(Constants.CMD_LOGIN) && json.getInt(Keys.STATUS_CODE) != Constants.LOGIN_SUCCESSFULLY){
+                } else if (json.getString(Keys.CMD).equals(Constants.CMD_LOGIN) && json.getInt(Keys.STATUS_CODE) != Constants.LOGIN_SUCCESSFULLY) {
                     dialog.dismiss();
-                    startActivity(new Intent(HomeActivity.this,LoginActivity.class));
+                    startActivity(new Intent(HomeActivity.this, LoginActivity.class));
                     finish();
-                }else if(json.getString(Keys.CMD).equals(Constants.CMD_FRIEND_LIST)){
-                    messageListener.onReceive(data);
-                }else if(json.getString(Keys.CMD).equals(Constants.CMD_FROMMESSAGE)){
-
+                }  else if (json.getString(Keys.CMD).equals(Constants.CMD_FROMMESSAGE)) {
                     String clientId = UserInfoManager.getInstance(HomeActivity.this).getClientId();
-                    DBMessage message = Converter.toTxtMessage(data,clientId,false,true);
+                    DBMessage message = Converter.toTxtMessage(data, clientId, false, true);
 
                     //create or update chat data
                     updateChatData(message);
 
                     dbManager.saveMessage(message);
-                    messageListener.onReceive(data);
+                    messageListener.onReceive(json.getString(Keys.CMD),data);
+                } else{
+                    messageListener.onReceive(json.getString(Keys.CMD),data);
                 }
             } catch (Exception e) {
+                Toast.makeText(HomeActivity.this, e.getMessage().toString(), Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private void updateChatData(DBMessage message){
+    private void updateChatData(DBMessage message) {
         List<DBChat> list = dbManager.getChat(message.getChannelId(), message.getFromId());
-        if(list.size() == 0){
+        if (list.size() == 0) {
             // create new chat
-            if(message.getChannelId().equals(Constants.PRIVATE_CHANNEL_ID)){
+            if (message.getChannelId().equals(Constants.PRIVATE_CHANNEL_ID)) {
                 //private chat
-                dbManager.saveChat(message.getChannelId(), message.getFromId(), message.getFromName(), message.getMessage(), message.getDate(), message.getImgUrl());
-            }else{
+
+                DBChat chat = new DBChat(null,UserInfoManager.getInstance(HomeActivity.this).getClientId(),message.getChannelId(),message.getFromId(),message.getFromName(),message.getMessage(), message.getDate(),  message.getImgUrl(),"0");
+                dbManager.saveChat(chat);
+            } else {
                 //group chat
-                dbManager.saveChat(message.getChannelId(), message.getFromId(), message.getChannalName(), message.getMessage(), message.getDate(), "");
+                DBChat chat = new DBChat(null,UserInfoManager.getInstance(HomeActivity.this).getClientId(),message.getChannelId(),message.getFromId(),message.getChannalName(),message.getMessage(), message.getDate(), message.getImgUrl(),"0");
+                dbManager.saveChat(chat);
             }
-        }else{
+        } else {
             //update chat: message and date;
             dbManager.updateChat(list.get(0).getId(), list.get(0).getChannalId(), list.get(0).getFriend_userId(), list.get(0).getName(),
                     message.getMessage(),
@@ -355,57 +350,25 @@ public class HomeActivity extends GenericFragmentActivity implements View.OnClic
         super.onStart();
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
     public interface MessageReceiveListener {
-        public void onReceive(String data);
+        public void onReceive(String cmd,String data);
     }
 
-    public void setMessageListener(MessageReceiveListener messageListener){
+    public void setMessageListener(MessageReceiveListener messageListener) {
         this.messageListener = messageListener;
     }
 
-    public void showBottomBar(){
+    public void showBottomBar() {
         main_bottom.setVisibility(View.VISIBLE);
     }
 
-    public void hideBottomBar(){
+    public void hideBottomBar() {
         main_bottom.setVisibility(View.GONE);
     }
 
-    public void sendGetFriends(){
-        Intent intent = new Intent();
-        intent.setAction(Constants.CMD_USER_TO_SERVICE);
-        intent.putExtra(Keys.CMD, Constants.CMD_MESSAGE);
-        UserInfoManager userInfoManager = UserInfoManager.getInstance(this);
-        String message = Helper.generateGetFriendMessage(userInfoManager.getClientId());
-        intent.putExtra(Keys.CONTENT, message);
-        sendBroadcast(intent);
-    }
 
-    public void sendReconnectMessage(){
-        Intent intent = new Intent();
-        intent.setAction(Constants.CMD_USER_TO_SERVICE);
-        intent.putExtra(Keys.CMD, Constants.CMD_RECONNECT);
-        intent.putExtra(Keys.CONTENT, "");
-        sendBroadcast(intent);
-    }
-
-    public void sendLoginMessage(){
-        Intent intent = new Intent();
-        intent.setAction(Constants.CMD_USER_TO_SERVICE);
-        UserInfoManager userInfoManager = UserInfoManager.getInstance(this);
-        String message = Helper.generateLoginMessage(userInfoManager.getAccount(), userInfoManager.getPWD(), userInfoManager.getAvatar());
-        intent.putExtra(Keys.CMD, Constants.CMD_MESSAGE);
-        intent.putExtra(Keys.CONTENT, message);
-        sendBroadcast(intent);
-    }
-
-    public DBManager getDBManager(){
-        if(dbManager == null){
+    public DBManager getDBManager() {
+        if (dbManager == null) {
             dbManager = new DBManager(this);
         }
         return dbManager;
@@ -415,13 +378,46 @@ public class HomeActivity extends GenericFragmentActivity implements View.OnClic
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(mDataReceiver);
+        isActive = false;
+        BroadcastManager.sendDisconnectMessage(this);
     }
 
-    public void logout(){
-//        UserInfoManager.getInstance(this).logout();
-////        clearFragment();
-//        finish();
-//        startActivity(new Intent(HomeActivity.this, LoginActivity.class));
-        finish();
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (!isAppOnForeground()) {
+            isActive = false;
+            BroadcastManager.sendDisconnectMessage(this);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!isActive) {
+            isActive = true;
+            dialog.show();
+            BroadcastManager.sendReconnectMessage(this);
+        }
+    }
+
+    public boolean isAppOnForeground() {
+        ActivityManager activityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+        String packageName = getApplicationContext().getPackageName();
+
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager
+                .getRunningAppProcesses();
+        if (appProcesses == null)
+            return false;
+
+        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+            // The name of the process that this object is associated with.
+            if (appProcess.processName.equals(packageName)
+                    && appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                return true;
+            }
+        }
+        return false;
     }
 }

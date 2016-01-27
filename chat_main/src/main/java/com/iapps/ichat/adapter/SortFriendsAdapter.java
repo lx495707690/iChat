@@ -47,6 +47,7 @@ public class SortFriendsAdapter extends BaseAdapter {
 			viewHolder.tvTitle = (TextView) view.findViewById(R.id.title);
 			viewHolder.tvLetter = (TextView) view.findViewById(R.id.catalog);
 			viewHolder.imgAvatar = (ImageView) view.findViewById(R.id.imgAvatar);
+			viewHolder.imgTick = (ImageView) view.findViewById(R.id.imgTick);
 			view.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) view.getTag();
@@ -66,6 +67,11 @@ public class SortFriendsAdapter extends BaseAdapter {
 			viewHolder.imgAvatar.setImageResource(R.drawable.default_useravatar);
 		}
 
+		if(mFriend.getIsSelected()){
+			viewHolder.imgTick.setVisibility(View.VISIBLE);
+		}else{
+			viewHolder.imgTick.setVisibility(View.GONE);
+		}
 		return view;
 
 	}
@@ -74,6 +80,7 @@ public class SortFriendsAdapter extends BaseAdapter {
 		TextView tvLetter;
 		TextView tvTitle;
 		ImageView imgAvatar;
+		ImageView imgTick;
 	}
 
 	public int getSectionForPosition(int position) {

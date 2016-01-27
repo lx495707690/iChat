@@ -34,11 +34,11 @@
                 android:paddingTop="5dip"
                 android:textColor="#454545" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="10dip">
+                android:padding="10dip"
+                android:gravity="center_vertical">
 
                 <ImageView
                     android:id="@+id/imgAvatar"
@@ -48,6 +48,7 @@
 
                 <TextView
                     android:id="@+id/title"
+                    android:layout_toRightOf="@+id/imgAvatar"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -56,7 +57,16 @@
                     android:paddingBottom="10dip"
                     android:paddingTop="10dip"
                     android:textColor="#336598" />
-            </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/imgTick"
+                    android:layout_width="30dip"
+                    android:layout_height="30dip"
+                    android:src="@drawable/icn_tick_blue"
+                    android:layout_marginRight="10dip"
+                    android:layout_alignParentRight="true"
+                    android:visibility="gone"/>
+            </RelativeLayout>
         </LinearLayout>
     </com.balysv.materialripple.MaterialRippleLayout>
 </LinearLayout>

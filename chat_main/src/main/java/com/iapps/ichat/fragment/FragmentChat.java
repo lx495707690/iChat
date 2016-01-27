@@ -12,11 +12,13 @@ import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.iapps.ichat.R;
 import com.iapps.ichat.activity.HomeActivity;
 import com.iapps.ichat.adapter.MessageAdapter;
+import com.iapps.ichat.helper.BroadcastManager;
 import com.iapps.ichat.helper.Constants;
 import com.iapps.ichat.helper.Converter;
 import com.iapps.ichat.helper.GenericFragmentiChat;
@@ -50,11 +52,13 @@ public class FragmentChat
     private int mCurrentPage = Constants.DEFAULT_PAGE;
     private TextView tvLoading;
     private boolean loadFinished = false;
+    private String chatName = "iApps";
 
-    public FragmentChat(long dbChannleId, String channalId, String friendId) {
+    public FragmentChat(long dbChannleId, String channalId, String friendId,String chatName) {
         this.channalId = channalId;
         this.friendId = friendId;
         this.dbChannleId = dbChannleId;
+        this.chatName = chatName;
     }
 
     @Override
@@ -67,7 +71,7 @@ public class FragmentChat
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setHasOptionsMenu(true);
-        home().setActionBar(getResources().getString(R.string.iapps));
+        home().setActionBar(chatName);
         home().enableHomeUp();
         home().hideBottomBar();
 
@@ -109,7 +113,7 @@ public class FragmentChat
                     DBMessage dbMessage = new DBMessage(null, clientId,edtMessage.getText().toString(), date.toString(), clientId, friendId, channalId, UserInfoManager.getInstance(getActivity()).getAvatar(), "","",true,true);
                     mBeanMessages.add(dbMessage);
                     mMessageAdapter.notifyDataSetChanged();
-                    home().sendTxtMessage(edtMessage.getText().toString(), channalId, friendId);
+                    BroadcastManager.sendTxtMessage(getActivity(),edtMessage.getText().toString(), channalId, friendId);
                     //save message
                     home().getDBManager().saveMessage(dbMessage);
                     edtMessage.setText("");
@@ -121,17 +125,19 @@ public class FragmentChat
 
         home().setMessageListener(new HomeActivity.MessageReceiveListener() {
             @Override
-            public void onReceive(String data) {
-                try {
-                    DBMessage dbMessage = Converter.toTxtMessage(data, clientId, false,true);
-                    if((dbMessage.getChannelId() .equals(Constants.PRIVATE_CHANNEL_ID)  && dbMessage.getFromId().equals(friendId))
-                              || (!dbMessage.getChannelId().equals(Constants.PRIVATE_CHANNEL_ID)  && dbMessage.getChannelId().equals(channalId))){
+            public void onReceive(String cmd,String data) {
+                if(cmd.equals(Constants.CMD_FROMMESSAGE)){
+                    try {
+                        DBMessage dbMessage = Converter.toTxtMessage(data, clientId, false, true);
+                        if((dbMessage.getChannelId() .equals(Constants.PRIVATE_CHANNEL_ID)  && dbMessage.getFromId().equals(friendId))
+                                || (!dbMessage.getChannelId().equals(Constants.PRIVATE_CHANNEL_ID)  && dbMessage.getChannelId().equals(channalId))){
 
-                        mBeanMessages.add(dbMessage);
-                        mMessageAdapter.notifyDataSetChanged();
+                            mBeanMessages.add(dbMessage);
+                            mMessageAdapter.notifyDataSetChanged();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(getActivity(), e.getMessage().toString(), Toast.LENGTH_SHORT).show();
                     }
-                } catch (Exception e) {
-
                 }
             }
         });

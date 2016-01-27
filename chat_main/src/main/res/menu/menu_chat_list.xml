@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item
+        android:icon="@drawable/ic_action_ic_overflow"
+        android:showAsAction="always"
+        android:title="">
+        <menu>
+            <!--<item-->
+                <!--android:id="@+id/menu_add_friend"-->
+                <!--android:icon="@drawable/ic_action_ic_add_grey"-->
+                <!--android:showAsAction="never"-->
+                <!--android:title="添加朋友">-->
+            <!--</item>-->
+            <item
+                android:id="@+id/menu_create_group"
+                android:icon="@drawable/ic_action_ic_add_grey"
+                android:showAsAction="never"
+                android:title="@string/create_group">
+            </item>
+        </menu>
+    </item>
+
+</menu>

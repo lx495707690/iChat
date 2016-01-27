@@ -568,17 +568,22 @@ public class Helper
 
 
 	public static  String generateTxtMessage(String message,String channalId,String fromId,String toId){
-		message = "{\"cmd\":\"message\",\"from\":\""+ fromId +"\",\"to\":\""+ toId + "\",\"channal\":\""+ channalId +"\",\"data\": \"" + message +"\",\"type\":\"text\"}";
+		message = "{\"cmd\":\""+Constants.CMD_MESSAGE +"\",\"from\":\""+ fromId +"\",\"to\":\""+ toId + "\",\"channal\":\""+ channalId +"\",\"data\": \"" + message +"\",\"type\":\"text\"}";
 		return  message;
 	}
 
 	public static  String generateLoginMessage(String account,String pwd,String imgUrl){
-		String message = ("{\"cmd\":\"login\",\"username\":\""+ account +"\",\"userpass\":\""+ pwd +"\",\"avatar\":\""+ imgUrl +"\"}");
+		String message = ("{\"cmd\":\""+Constants.CMD_LOGIN+"\",\"username\":\""+ account +"\",\"userpass\":\""+ pwd +"\",\"avatar\":\""+ imgUrl +"\"}");
 		return  message;
 	}
 
 	public static  String generateGetFriendMessage(String userId){
-		String message = "{\"cmd\":\"getFriendList\",\"userId\":\""+ userId +"\"}";
+		String message = "{\"cmd\":\""+Constants.CMD_FRIEND_LIST+"\",\"userId\":\""+ userId +"\"}";
+		return  message;
+	}
+
+	public static  String generateCreateGroupMessage(String name,String userId,String avatar,String inviteUsers){
+		String message = "{\"cmd\":\""+Constants.CMD_CREATE_GROUP+"\",\"name\":\""+ name +"\",\"channal\":\"0\",\"from\":\""+ userId +"\",\"avatar\":\""+ avatar +"\",\"inviteUsers\":\""+ inviteUsers +"\"}";
 		return  message;
 	}
 
