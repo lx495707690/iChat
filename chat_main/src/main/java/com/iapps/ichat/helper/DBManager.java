@@ -76,7 +76,7 @@ public class DBManager {
         if(table.equals(Constants.DB_CHAT)){
             query = getDBChatDao().queryBuilder()
                     .where(DBChatDao.Properties.My_userId.eq(UserInfoManager.getInstance(ctx).getClientId()))
-                    .orderDesc(DBChatDao.Properties.Date)
+                    .orderDesc(DBChatDao.Properties.Receive_message_date)
                     .build();
         }else if(table.equals(Constants.DB_FRIEND)){
             query = getDBFriendDao().queryBuilder()
@@ -106,9 +106,19 @@ public class DBManager {
         return  results;
     }
 
+    public List getChatByChannalId(String channelId){
+        Query query = getDBChatDao().queryBuilder()
+                .where(DBChatDao.Properties.ChannalId.eq(channelId))
+                .where(DBChatDao.Properties.My_userId.eq(UserInfoManager.getInstance(ctx).getClientId()))
+                .limit(1)
+                .build();
+        List results = query.list();
+        return  results;
+    }
+
     //update chat
-    public void updateChat(Long id, String channelId, String userId, String name, String message, String date, String imgUrl){
-        getDBChatDao().update(new DBChat(id,UserInfoManager.getInstance(ctx).getClientId(),channelId,userId,name,message,date,imgUrl,"0"));
+    public void updateChat(Long id, String channelId, String userId, String name, String message, String date, String imgUrl, String unReadNum,String receiveMsgDate){
+        getDBChatDao().update(new DBChat(id,UserInfoManager.getInstance(ctx).getClientId(),channelId,userId,name,message,date,receiveMsgDate,imgUrl,unReadNum));
     }
 
     //message record
@@ -119,6 +129,7 @@ public class DBManager {
             qb.where(qb.or(qb.and(DBMessageDao.Properties.FromId.eq(myId), DBMessageDao.Properties.ToId.eq(friendId)),
                     qb.and(DBMessageDao.Properties.FromId.eq(friendId), DBMessageDao.Properties.ToId.eq(myId))))
                     .where(DBMessageDao.Properties.My_userId.eq(UserInfoManager.getInstance(ctx).getClientId()))
+                    .where(DBMessageDao.Properties.ChannelId.eq(Constants.PRIVATE_CHANNEL_ID))
                     .orderDesc(DBMessageDao.Properties.Id)
                     .offset(offset)
                     .limit(limit);

@@ -1,6 +1,7 @@
 package com.iapps.ichat.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.iapps.ichat.helper.DBManager;
 import com.iapps.ichat.helper.Helper;
 import com.iapps.libs.helpers.BaseHelper;
 import com.iapps.libs.helpers.BaseUIHelper;
+import com.readystatesoftware.viewbadger.BadgeView;
 
 import java.util.Date;
 import java.util.List;
@@ -63,12 +65,24 @@ public class ChatListAdapter
             holder.tvMessage = (TextView) convertView.findViewById(R.id.tvMessage);
             holder.tvDate = (TextView) convertView.findViewById(R.id.tvDate);
             holder.imgAvatar = (ImageView) convertView.findViewById(R.id.imgAvatar);
+
+            holder.badge = new BadgeView(ctx, holder.imgAvatar);
+            holder.badge.setBadgeBackgroundColor(ctx.getResources().getColor(R.color.cpb_red));
+            holder.badge.setTextColor(Color.WHITE);
+
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
         DBChat chat = objects.get(position);
+
+        if(Integer.parseInt(chat.getUnReadNum()) > 0){
+            holder.badge.setText(chat.getUnReadNum());
+            holder.badge.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
+            holder.badge.show();
+        }
+
         holder.tvName.setText(chat.getName());
         holder.tvMessage.setText(chat.getMessage());
         if(!Helper.isEmpty(chat.getDate())){
@@ -99,6 +113,7 @@ public class ChatListAdapter
         }else{
             holder.imgAvatar.setImageResource(R.drawable.default_useravatar);
         }
+
         return convertView;
     }
 
@@ -107,5 +122,6 @@ public class ChatListAdapter
         TextView tvMessage;
         TextView tvDate;
         ImageView imgAvatar;
+        BadgeView badge;
     }
 }

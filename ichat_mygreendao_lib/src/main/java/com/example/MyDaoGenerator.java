@@ -67,6 +67,7 @@ public class MyDaoGenerator {
         chat.addStringProperty("name").notNull();
         chat.addStringProperty("message").notNull();
         chat.addStringProperty("date").notNull();
+        chat.addStringProperty("receive_message_date");
         chat.addStringProperty("imgUrl").notNull();
         chat.addStringProperty("unReadNum").notNull();
     }

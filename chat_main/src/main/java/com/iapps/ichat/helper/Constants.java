@@ -154,6 +154,8 @@ public class Constants
 	public static final String CMD_DISCONNECT = "disconnect";
 	public static final String CMD_FRIEND_LIST = "getFriendList";
 	public static final String CMD_CREATE_GROUP = "createGroup";
+	public static final String CMD_OFFLINE_MESSAGE = "offlineMessage";
+	public static final String CMD_GET_OFFLINE_MESSAGE = "getOfflineMessage";
 
 	//DB
 	public static final String DB_CHAT = "db_chat";

@@ -129,14 +129,15 @@ public class FragmentChat
                 if(cmd.equals(Constants.CMD_FROMMESSAGE)){
                     try {
                         DBMessage dbMessage = Converter.toTxtMessage(data, clientId, false, true);
-                        if((dbMessage.getChannelId() .equals(Constants.PRIVATE_CHANNEL_ID)  && dbMessage.getFromId().equals(friendId))
-                                || (!dbMessage.getChannelId().equals(Constants.PRIVATE_CHANNEL_ID)  && dbMessage.getChannelId().equals(channalId))){
-
-                            mBeanMessages.add(dbMessage);
-                            mMessageAdapter.notifyDataSetChanged();
-                        }
+                        filterMessage(dbMessage);
                     } catch (Exception e) {
                         Toast.makeText(getActivity(), e.getMessage().toString(), Toast.LENGTH_SHORT).show();
+                    }
+                }else if(cmd.equals(Constants.CMD_OFFLINE_MESSAGE)){
+                    //off line message
+                    List<DBMessage> messages = Converter.toListTxtMessage(data, clientId, false, true);
+                    for (int i = 0; i < messages.size(); i++){
+                        filterMessage(messages.get(i));
                     }
                 }
             }
@@ -159,6 +160,15 @@ public class FragmentChat
                 }
             }
         });
+    }
+
+    private void filterMessage(DBMessage dbMessage){
+        if((dbMessage.getChannelId() .equals(Constants.PRIVATE_CHANNEL_ID)  && dbMessage.getFromId().equals(friendId))
+                || (!dbMessage.getChannelId().equals(Constants.PRIVATE_CHANNEL_ID)  && dbMessage.getChannelId().equals(channalId))){
+
+            mBeanMessages.add(dbMessage);
+            mMessageAdapter.notifyDataSetChanged();
+        }
     }
 
     private void sortMessage() {
@@ -237,6 +247,6 @@ public class FragmentChat
         List<DBChat> list = home().getDBManager().getChat(channalId, friendId);
         home().getDBManager().updateChat(dbChannleId, channalId, friendId, list.get(0).getName(),
                 mBeanMessages.get(mBeanMessages.size() - 1).getMessage(),
-                mBeanMessages.get(mBeanMessages.size() - 1).getDate(), list.get(0).getImgUrl());
+                mBeanMessages.get(mBeanMessages.size() - 1).getDate(), list.get(0).getImgUrl(),"0",Helper.formateDate(new java.util.Date(System.currentTimeMillis()), Constants.DATE_TIME_JSON));
     }
 }

@@ -31,6 +31,7 @@ public class FragmentChatList
 	private ChatListAdapter mChatAdapter;
 	private List<DBChat> mChatList = new ArrayList<>();
 
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		setHasOptionsMenu(true);
@@ -73,6 +74,13 @@ public class FragmentChatList
 		lvChat.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+				DBChat chat = mChatList.get(i);
+
+				home().getDBManager().updateChat(chat.getId(), chat.getChannalId(), chat.getFriend_userId(), chat.getName(),
+						chat.getMessage(),
+						chat.getDate(), chat.getImgUrl(), "0",chat.getReceive_message_date());
+
 				home().setFragment(new FragmentChat(mChatList.get(i).getId(), mChatList.get(i).getChannalId(), mChatList.get(i).getFriend_userId(),mChatList.get(i).getName()));
 			}
 		});
@@ -81,7 +89,7 @@ public class FragmentChatList
 			@Override
 			public void onReceive(String cmd,String data) {
 
-				if(cmd.equals(Constants.CMD_FROMMESSAGE)){
+				if(cmd.equals(Constants.CMD_FROMMESSAGE)|| cmd.equals(Constants.CMD_OFFLINE_MESSAGE)){
 					try {
 						updateChatData();
 						mChatAdapter.notifyDataSetChanged();

@@ -587,6 +587,11 @@ public class Helper
 		return  message;
 	}
 
+	public static  String generateGetOffLineMessage(String userId){
+		String message = "{\"cmd\":\""+Constants.CMD_GET_OFFLINE_MESSAGE+"\",\"userId\":\""+ userId +"\"}";
+		return  message;
+	}
+
 
 	/**
 	 * 汉语拼音转换工具
@@ -659,5 +664,12 @@ public class Helper
 				}
 			}
 		}.start();
+	}
+
+	public static String formateDate(Date date, String format) {
+		SimpleDateFormat postFormater = new SimpleDateFormat(format);
+
+		String newDateStr = postFormater.format(date);
+		return newDateStr;
 	}
 }

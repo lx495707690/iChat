@@ -39,6 +39,7 @@ public class BaseKeys {
     public static final String FOLDERS = "folders";
 	public static final String PHOTO = "photo";
 	public static final String CONTACT = "contact";
+	public static final String CONTENT = "content";
 	public static final String EMAIL = "email";
 	public static final String REMARKS = "remarks";
 	public static final String HOURS = "hours";

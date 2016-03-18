@@ -70,4 +70,15 @@ public class BroadcastManager {
         intent.putExtra(Keys.CMD, Constants.CMD_CREATE_GROUP);
         ctx.sendBroadcast(intent);
     }
+
+    //command offline message
+    public static void sendGetOffLineMessage(Context ctx){
+        Intent intent = new Intent();
+        intent.setAction(Constants.CMD_TO_SERVICE);
+        String mClientId = UserInfoManager.getInstance(ctx).getClientId();
+        String message = Helper.generateGetOffLineMessage(mClientId);
+        intent.putExtra(Keys.CONTENT, message);
+        intent.putExtra(Keys.CMD, Constants.CMD_GET_OFFLINE_MESSAGE);
+        ctx.sendBroadcast(intent);
+    }
 }
