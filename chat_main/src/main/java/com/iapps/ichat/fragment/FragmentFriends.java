@@ -265,7 +265,9 @@ public class FragmentFriends extends GenericFragmentiChat {
                         home().setFragment(new FragmentChat(dbChannelId, channalId, Constants.GROUP_USER_ID,groupName));
                     }else{
                         dialog.dismiss();
-                        Helper.showAlert(getActivity(), json.getString(Keys.MESSAGE));
+                        if(json.has(Keys.MESSAGE)){
+                            Helper.showAlert(getActivity(), json.getString(Keys.MESSAGE));
+                        }
                     }
 
                 } catch (Exception e) {
@@ -274,18 +276,18 @@ public class FragmentFriends extends GenericFragmentiChat {
             }
         });
 
-        //get friend from database first.
-        List<DBFriend> list = home().getDBManager().searchDB(Constants.DB_FRIEND);
-        if (list.size() > 0) {
-            mSourceDataList.clear();
-            mSourceDataList.addAll(list);
-            filledData();
-            mFriendAdapter = new SortFriendsAdapter(getActivity(), mSourceDataList);
-            lvContacts.setAdapter(mFriendAdapter);
-        } else {
+//        //get friend from database first.
+//        List<DBFriend> list = home().getDBManager().searchDB(Constants.DB_FRIEND);
+//        if (list.size() > 0) {
+//            mSourceDataList.clear();
+//            mSourceDataList.addAll(list);
+//            filledData();
+//            mFriendAdapter = new SortFriendsAdapter(getActivity(), mSourceDataList);
+//            lvContacts.setAdapter(mFriendAdapter);
+//        } else {
             //get friends
             BroadcastManager.sendGetFriends(getActivity());
-        }
+//        }
     }
 
     private void filledData() {

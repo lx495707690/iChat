@@ -20,7 +20,6 @@ public class Converter
         DBMessage m = null;
 		try {
 			JSONObject j = new JSONObject(data);
-            Date date = new Date();
             String message = "";
             String fromId = "";
 			String toId = "";
@@ -41,7 +40,12 @@ public class Converter
 			if (!j.isNull(Keys.CHANNAL_NAME))
 				channalName = j.getString(Keys.CHANNAL_NAME);
 
-            m = new DBMessage(null,my_userId, message,date.toString(), fromId, toId,channelId,"",fromName, channalName,fromMe,isSended);
+			Date date = new Date();
+			SimpleDateFormat sdf =   new SimpleDateFormat( Constants.DATE_TIME_JSON );
+			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+			sdf.format(date);
+
+			m = new DBMessage(null,my_userId, message,date.toString(), fromId, toId,channelId,"",fromName, channalName,fromMe,isSended);
 
 		}
 		catch (Exception e) {

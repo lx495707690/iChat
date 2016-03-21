@@ -137,7 +137,8 @@ public class Constants
 	};
 
 	// Websocket server
-	public static final String WEBSOCKET_HOST = "ws://192.168.1.129:9503";
+//	public static final String WEBSOCKET_HOST = "ws://192.168.1.129:9503";
+	public static final String WEBSOCKET_HOST = "ws://52.76.146.143:9501";
 	public static final String CONNECT_SUCCESSFULLY = "Connect to server successfully";
 	public static final String CONNECT_FAILED = "Connect to server failed";
 
