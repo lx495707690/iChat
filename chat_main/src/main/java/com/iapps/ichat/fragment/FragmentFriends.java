@@ -30,8 +30,10 @@ import com.iapps.ichat.helper.Keys;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import me.itangqi.greendao.DBChat;
@@ -259,7 +261,11 @@ public class FragmentFriends extends GenericFragmentiChat {
                         String channalId = groupData.getString(Keys.ID);
                         String groupName = groupData.getString(Keys.NAME);
                         String groupAvatar = groupData.getString(Keys.USER_AVATAR);
-                        DBChat chat = new DBChat(null,clientId,channalId,Constants.GROUP_USER_ID,groupName,"","",groupAvatar,"0");
+
+                        Date date = new Date();
+                        SimpleDateFormat sdf =   new SimpleDateFormat( Constants.DATE_TIME_JSON );
+
+                        DBChat chat = new DBChat(null,clientId,channalId,Constants.GROUP_USER_ID,groupName,"",sdf.format(date),groupAvatar,"0");
                         long dbChannelId = home().getDBManager().saveChat(chat);
                         home().popBackstack();
                         home().setFragment(new FragmentChat(dbChannelId, channalId, Constants.GROUP_USER_ID,groupName));

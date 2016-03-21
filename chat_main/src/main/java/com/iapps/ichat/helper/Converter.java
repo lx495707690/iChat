@@ -42,10 +42,7 @@ public class Converter
 
 			Date date = new Date();
 			SimpleDateFormat sdf =   new SimpleDateFormat( Constants.DATE_TIME_JSON );
-			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-			sdf.format(date);
-
-			m = new DBMessage(null,my_userId, message,date.toString(), fromId, toId,channelId,"",fromName, channalName,fromMe,isSended);
+			m = new DBMessage(null,my_userId, message,sdf.format(date), fromId, toId,channelId,"",fromName, channalName,fromMe,isSended);
 
 		}
 		catch (Exception e) {
@@ -88,10 +85,9 @@ public class Converter
 				SimpleDateFormat sdf =   new SimpleDateFormat( Constants.DATE_TIME_JSON );
 				sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 				Date d = sdf.parse(date);
-
-
+				String str = Helper.formateDate(d,Constants.DATE_TIME_JSON);
 				DBMessage m = null;
-				m = new DBMessage(null,my_userId, message,d.toString(), fromId, toId,channelId,"",fromName, channalName,fromMe,isSended);
+				m = new DBMessage(null,my_userId, message,str, fromId, toId,channelId,"",fromName, channalName,fromMe,isSended);
 				messages.add(m);
 			}
 		}

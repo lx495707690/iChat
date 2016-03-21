@@ -25,6 +25,7 @@ import com.iapps.ichat.helper.GenericFragmentiChat;
 import com.iapps.ichat.helper.Helper;
 import com.iapps.ichat.helper.UserInfoManager;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -110,7 +111,8 @@ public class FragmentChat
                 if (actionId == EditorInfo.IME_ACTION_SEND) {
 
                     Date date = new Date();
-                    DBMessage dbMessage = new DBMessage(null, clientId,edtMessage.getText().toString(), date.toString(), clientId, friendId, channalId, UserInfoManager.getInstance(getActivity()).getAvatar(), "","",true,true);
+                    SimpleDateFormat sdf =   new SimpleDateFormat( Constants.DATE_TIME_JSON );
+                    DBMessage dbMessage = new DBMessage(null, clientId,edtMessage.getText().toString(), sdf.format(date), clientId, friendId, channalId, UserInfoManager.getInstance(getActivity()).getAvatar(), "","",true,true);
                     mBeanMessages.add(dbMessage);
                     mMessageAdapter.notifyDataSetChanged();
                     BroadcastManager.sendTxtMessage(getActivity(),edtMessage.getText().toString(), channalId, friendId);

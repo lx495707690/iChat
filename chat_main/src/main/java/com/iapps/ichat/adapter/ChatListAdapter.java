@@ -18,6 +18,8 @@ import com.iapps.libs.helpers.BaseHelper;
 import com.iapps.libs.helpers.BaseUIHelper;
 import com.readystatesoftware.viewbadger.BadgeView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -86,7 +88,16 @@ public class ChatListAdapter
         holder.tvName.setText(chat.getName());
         holder.tvMessage.setText(chat.getMessage());
         if(!Helper.isEmpty(chat.getDate())){
-            holder.tvDate.setText(BaseHelper.calcTimeDiff(new Date(chat.getDate())));
+
+            SimpleDateFormat sdf =   new SimpleDateFormat( Constants.DATE_TIME_JSON );
+            Date d = null;
+            try {
+                d = sdf.parse(chat.getDate());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            holder.tvDate.setText(BaseHelper.calcTimeDiff(d));
         }else{
             holder.tvDate.setText("");
         }
