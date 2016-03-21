@@ -27,7 +27,7 @@ public class DBFriendDao extends AbstractDao<DBFriend, Long> {
         public final static Property My_userId = new Property(1, String.class, "my_userId", false, "MY_USER_ID");
         public final static Property Friend_userId = new Property(2, String.class, "friend_userId", false, "FRIEND_USER_ID");
         public final static Property Name = new Property(3, String.class, "name", false, "NAME");
-        public final static Property ImgUrl = new Property(4, String.class, "imgUrl", false, "IMG_URL");
+        public final static Property Avatar = new Property(4, String.class, "avatar", false, "AVATAR");
         public final static Property Phone = new Property(5, String.class, "phone", false, "PHONE");
         public final static Property Address = new Property(6, String.class, "address", false, "ADDRESS");
     };
@@ -49,7 +49,7 @@ public class DBFriendDao extends AbstractDao<DBFriend, Long> {
                 "\"MY_USER_ID\" TEXT NOT NULL ," + // 1: my_userId
                 "\"FRIEND_USER_ID\" TEXT NOT NULL ," + // 2: friend_userId
                 "\"NAME\" TEXT NOT NULL ," + // 3: name
-                "\"IMG_URL\" TEXT," + // 4: imgUrl
+                "\"AVATAR\" TEXT," + // 4: avatar
                 "\"PHONE\" TEXT," + // 5: phone
                 "\"ADDRESS\" TEXT);"); // 6: address
     }
@@ -73,9 +73,9 @@ public class DBFriendDao extends AbstractDao<DBFriend, Long> {
         stmt.bindString(3, entity.getFriend_userId());
         stmt.bindString(4, entity.getName());
  
-        String imgUrl = entity.getImgUrl();
-        if (imgUrl != null) {
-            stmt.bindString(5, imgUrl);
+        String avatar = entity.getAvatar();
+        if (avatar != null) {
+            stmt.bindString(5, avatar);
         }
  
         String phone = entity.getPhone();
@@ -103,7 +103,7 @@ public class DBFriendDao extends AbstractDao<DBFriend, Long> {
             cursor.getString(offset + 1), // my_userId
             cursor.getString(offset + 2), // friend_userId
             cursor.getString(offset + 3), // name
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // imgUrl
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // avatar
             cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // phone
             cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6) // address
         );
@@ -117,7 +117,7 @@ public class DBFriendDao extends AbstractDao<DBFriend, Long> {
         entity.setMy_userId(cursor.getString(offset + 1));
         entity.setFriend_userId(cursor.getString(offset + 2));
         entity.setName(cursor.getString(offset + 3));
-        entity.setImgUrl(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setAvatar(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setPhone(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
         entity.setAddress(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
      }

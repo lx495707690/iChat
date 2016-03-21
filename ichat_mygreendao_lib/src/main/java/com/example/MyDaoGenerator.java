@@ -48,7 +48,7 @@ public class MyDaoGenerator {
         chat.addStringProperty("my_userId").notNull();
         chat.addStringProperty("friend_userId").notNull();
         chat.addStringProperty("name").notNull();
-        chat.addStringProperty("imgUrl");
+        chat.addStringProperty("avatar");
         chat.addStringProperty("phone");
         chat.addStringProperty("address");
     }
@@ -68,8 +68,8 @@ public class MyDaoGenerator {
         chat.addStringProperty("message").notNull();
         chat.addStringProperty("date").notNull();
         chat.addStringProperty("receive_message_date");
-        chat.addStringProperty("imgUrl").notNull();
-        chat.addStringProperty("unReadNum").notNull();
+        chat.addStringProperty("image").notNull();
+        chat.addStringProperty("unread_num").notNull();
     }
 
     /**
@@ -86,10 +86,10 @@ public class MyDaoGenerator {
         message.addStringProperty("fromId").notNull();
         message.addStringProperty("toId").notNull();
         message.addStringProperty("channelId").notNull();
-        message.addStringProperty("imgUrl").notNull();
-        message.addStringProperty("fromName").notNull();
-        message.addStringProperty("channalName").notNull();
-        message.addBooleanProperty("fromMe").notNull();
-        message.addBooleanProperty("isSended").notNull();
+        message.addStringProperty("image").notNull();
+        message.addStringProperty("from_name").notNull();
+        message.addStringProperty("channal_name").notNull();
+        message.addBooleanProperty("from_me").notNull();
+        message.addBooleanProperty("is_sended").notNull();
     }
 }

@@ -166,7 +166,7 @@ public class FragmentFriends extends GenericFragmentiChat {
                     List<DBChat> chatList = home().getDBManager().getChat(Constants.PRIVATE_CHANNEL_ID, friend.getFriend_userId());
                     if (chatList.size() == 0) {
                         //create new chat
-                        DBChat chat = new DBChat(null,clientId,Constants.PRIVATE_CHANNEL_ID,friend.getFriend_userId(),friend.getName(),"","",Helper.formateDate(new java.util.Date(System.currentTimeMillis()),Constants.DATE_TIME_JSON),friend.getImgUrl(),"0");
+                        DBChat chat = new DBChat(null,clientId,Constants.PRIVATE_CHANNEL_ID,friend.getFriend_userId(),friend.getName(),"","",Helper.formateDate(new java.util.Date(System.currentTimeMillis()),Constants.DATE_TIME_JSON),friend.getAvatar(),"0");
                         dbChannelId = home().getDBManager().saveChat(chat);
                     } else {
                         dbChannelId = chatList.get(0).getId();

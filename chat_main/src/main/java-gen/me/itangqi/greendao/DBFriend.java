@@ -13,9 +13,10 @@ public class DBFriend implements Comparable<DBFriend>{
     private String friend_userId;
     /** Not-null value. */
     private String name;
-    private String imgUrl;
+    private String avatar;
     private String phone;
     private String address;
+
     private String sortLetters;
     private boolean isSelected = false;
     public DBFriend() {
@@ -25,12 +26,12 @@ public class DBFriend implements Comparable<DBFriend>{
         this.id = id;
     }
 
-    public DBFriend(Long id, String my_userId, String friend_userId, String name, String imgUrl, String phone, String address) {
+    public DBFriend(Long id, String my_userId, String friend_userId, String name, String avatar, String phone, String address) {
         this.id = id;
         this.my_userId = my_userId;
         this.friend_userId = friend_userId;
         this.name = name;
-        this.imgUrl = imgUrl;
+        this.avatar = avatar;
         this.phone = phone;
         this.address = address;
     }
@@ -73,12 +74,12 @@ public class DBFriend implements Comparable<DBFriend>{
         this.name = name;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getPhone() {

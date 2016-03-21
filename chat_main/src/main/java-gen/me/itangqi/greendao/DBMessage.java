@@ -20,13 +20,13 @@ public class DBMessage {
     /** Not-null value. */
     private String channelId;
     /** Not-null value. */
-    private String imgUrl;
+    private String image;
     /** Not-null value. */
-    private String fromName;
+    private String from_name;
     /** Not-null value. */
-    private String channalName;
-    private boolean fromMe;
-    private boolean isSended;
+    private String channal_name;
+    private boolean from_me;
+    private boolean is_sended;
 
     public DBMessage() {
     }
@@ -35,7 +35,7 @@ public class DBMessage {
         this.id = id;
     }
 
-    public DBMessage(Long id, String my_userId, String message, String date, String fromId, String toId, String channelId, String imgUrl, String fromName, String channalName, boolean fromMe, boolean isSended) {
+    public DBMessage(Long id, String my_userId, String message, String date, String fromId, String toId, String channelId, String image, String from_name, String channal_name, boolean from_me, boolean is_sended) {
         this.id = id;
         this.my_userId = my_userId;
         this.message = message;
@@ -43,11 +43,11 @@ public class DBMessage {
         this.fromId = fromId;
         this.toId = toId;
         this.channelId = channelId;
-        this.imgUrl = imgUrl;
-        this.fromName = fromName;
-        this.channalName = channalName;
-        this.fromMe = fromMe;
-        this.isSended = isSended;
+        this.image = image;
+        this.from_name = from_name;
+        this.channal_name = channal_name;
+        this.from_me = from_me;
+        this.is_sended = is_sended;
     }
 
     public Long getId() {
@@ -119,49 +119,49 @@ public class DBMessage {
     }
 
     /** Not-null value. */
-    public String getImgUrl() {
-        return imgUrl;
+    public String getImage() {
+        return image;
     }
 
     /** Not-null value; ensure this value is available before it is saved to the database. */
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
+    public void setImage(String image) {
+        this.image = image;
     }
 
     /** Not-null value. */
-    public String getFromName() {
-        return fromName;
+    public String getFrom_name() {
+        return from_name;
     }
 
     /** Not-null value; ensure this value is available before it is saved to the database. */
-    public void setFromName(String fromName) {
-        this.fromName = fromName;
+    public void setFrom_name(String from_name) {
+        this.from_name = from_name;
     }
 
     /** Not-null value. */
-    public String getChannalName() {
-        return channalName;
+    public String getChannal_name() {
+        return channal_name;
     }
 
     /** Not-null value; ensure this value is available before it is saved to the database. */
-    public void setChannalName(String channalName) {
-        this.channalName = channalName;
+    public void setChannal_name(String channal_name) {
+        this.channal_name = channal_name;
     }
 
-    public boolean getFromMe() {
-        return fromMe;
+    public boolean getFrom_me() {
+        return from_me;
     }
 
-    public void setFromMe(boolean fromMe) {
-        this.fromMe = fromMe;
+    public void setFrom_me(boolean from_me) {
+        this.from_me = from_me;
     }
 
-    public boolean getIsSended() {
-        return isSended;
+    public boolean getIs_sended() {
+        return is_sended;
     }
 
-    public void setIsSended(boolean isSended) {
-        this.isSended = isSended;
+    public void setIs_sended(boolean is_sended) {
+        this.is_sended = is_sended;
     }
 
 }

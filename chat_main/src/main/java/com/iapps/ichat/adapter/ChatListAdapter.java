@@ -77,8 +77,8 @@ public class ChatListAdapter
 
         DBChat chat = objects.get(position);
 
-        if(Integer.parseInt(chat.getUnReadNum()) > 0){
-            holder.badge.setText(chat.getUnReadNum());
+        if(Integer.parseInt(chat.getUnread_num()) > 0){
+            holder.badge.setText(chat.getUnread_num());
             holder.badge.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
             holder.badge.show();
         }
@@ -99,9 +99,9 @@ public class ChatListAdapter
             String imgUrl = "";
             if(list.size() > 0){
                 friend = list.get(0);
-                imgUrl = friend.getImgUrl();
+                imgUrl = friend.getAvatar();
             }else{
-                imgUrl = chat.getImgUrl();
+                imgUrl = chat.getImage();
             }
 
             if(!BaseHelper.isEmpty(imgUrl)){

@@ -53,7 +53,7 @@ public class MessageAdapter
 
         DBMessage message = getItem(position);
 
-        if(message.getFromMe()){
+        if(message.getFrom_me()){
             holder.llReceivedMsg.setVisibility(View.GONE);
             holder.llSendedMsg.setVisibility(View.VISIBLE);
             holder.tvSendedMsg.setText(message.getMessage());
@@ -72,9 +72,9 @@ public class MessageAdapter
             String imgUrl = "";
             if(list.size() > 0){
                 friend = list.get(0);
-                imgUrl = friend.getImgUrl();
+                imgUrl = friend.getAvatar();
             }else{
-                imgUrl = message.getImgUrl();
+                imgUrl = message.getImage();
             }
 
             if(!BaseHelper.isEmpty(imgUrl)){

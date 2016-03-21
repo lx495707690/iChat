@@ -84,10 +84,10 @@ public class FragmentChat
 
         //init lvChat
         mMessageAdapter = new MessageAdapter(getActivity(), mBeanMessages);
-        lvChat.setAdapter(mMessageAdapter);
         View header = LayoutInflater.from(getActivity()).inflate(R.layout.cell_loading, null);
         tvLoading = (TextView) header.findViewById(R.id.tvLoading);
         lvChat.addHeaderView(header);
+        lvChat.setAdapter(mMessageAdapter);
 
         //get message data from DB
         mCurrentPage = Constants.DEFAULT_PAGE;
@@ -247,6 +247,6 @@ public class FragmentChat
         List<DBChat> list = home().getDBManager().getChat(channalId, friendId);
         home().getDBManager().updateChat(dbChannleId, channalId, friendId, list.get(0).getName(),
                 mBeanMessages.get(mBeanMessages.size() - 1).getMessage(),
-                mBeanMessages.get(mBeanMessages.size() - 1).getDate(), list.get(0).getImgUrl(),"0",Helper.formateDate(new java.util.Date(System.currentTimeMillis()), Constants.DATE_TIME_JSON));
+                mBeanMessages.get(mBeanMessages.size() - 1).getDate(), list.get(0).getImage(),"0",Helper.formateDate(new java.util.Date(System.currentTimeMillis()), Constants.DATE_TIME_JSON));
     }
 }

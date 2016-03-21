@@ -30,11 +30,11 @@ public class DBMessageDao extends AbstractDao<DBMessage, Long> {
         public final static Property FromId = new Property(4, String.class, "fromId", false, "FROM_ID");
         public final static Property ToId = new Property(5, String.class, "toId", false, "TO_ID");
         public final static Property ChannelId = new Property(6, String.class, "channelId", false, "CHANNEL_ID");
-        public final static Property ImgUrl = new Property(7, String.class, "imgUrl", false, "IMG_URL");
-        public final static Property FromName = new Property(8, String.class, "fromName", false, "FROM_NAME");
-        public final static Property ChannalName = new Property(9, String.class, "channalName", false, "CHANNAL_NAME");
-        public final static Property FromMe = new Property(10, boolean.class, "fromMe", false, "FROM_ME");
-        public final static Property IsSended = new Property(11, boolean.class, "isSended", false, "IS_SENDED");
+        public final static Property Image = new Property(7, String.class, "image", false, "IMAGE");
+        public final static Property From_name = new Property(8, String.class, "from_name", false, "FROM_NAME");
+        public final static Property Channal_name = new Property(9, String.class, "channal_name", false, "CHANNAL_NAME");
+        public final static Property From_me = new Property(10, boolean.class, "from_me", false, "FROM_ME");
+        public final static Property Is_sended = new Property(11, boolean.class, "is_sended", false, "IS_SENDED");
     };
 
 
@@ -57,11 +57,11 @@ public class DBMessageDao extends AbstractDao<DBMessage, Long> {
                 "\"FROM_ID\" TEXT NOT NULL ," + // 4: fromId
                 "\"TO_ID\" TEXT NOT NULL ," + // 5: toId
                 "\"CHANNEL_ID\" TEXT NOT NULL ," + // 6: channelId
-                "\"IMG_URL\" TEXT NOT NULL ," + // 7: imgUrl
-                "\"FROM_NAME\" TEXT NOT NULL ," + // 8: fromName
-                "\"CHANNAL_NAME\" TEXT NOT NULL ," + // 9: channalName
-                "\"FROM_ME\" INTEGER NOT NULL ," + // 10: fromMe
-                "\"IS_SENDED\" INTEGER NOT NULL );"); // 11: isSended
+                "\"IMAGE\" TEXT NOT NULL ," + // 7: image
+                "\"FROM_NAME\" TEXT NOT NULL ," + // 8: from_name
+                "\"CHANNAL_NAME\" TEXT NOT NULL ," + // 9: channal_name
+                "\"FROM_ME\" INTEGER NOT NULL ," + // 10: from_me
+                "\"IS_SENDED\" INTEGER NOT NULL );"); // 11: is_sended
     }
 
     /** Drops the underlying database table. */
@@ -85,11 +85,11 @@ public class DBMessageDao extends AbstractDao<DBMessage, Long> {
         stmt.bindString(5, entity.getFromId());
         stmt.bindString(6, entity.getToId());
         stmt.bindString(7, entity.getChannelId());
-        stmt.bindString(8, entity.getImgUrl());
-        stmt.bindString(9, entity.getFromName());
-        stmt.bindString(10, entity.getChannalName());
-        stmt.bindLong(11, entity.getFromMe() ? 1L: 0L);
-        stmt.bindLong(12, entity.getIsSended() ? 1L: 0L);
+        stmt.bindString(8, entity.getImage());
+        stmt.bindString(9, entity.getFrom_name());
+        stmt.bindString(10, entity.getChannal_name());
+        stmt.bindLong(11, entity.getFrom_me() ? 1L: 0L);
+        stmt.bindLong(12, entity.getIs_sended() ? 1L: 0L);
     }
 
     /** @inheritdoc */
@@ -109,11 +109,11 @@ public class DBMessageDao extends AbstractDao<DBMessage, Long> {
             cursor.getString(offset + 4), // fromId
             cursor.getString(offset + 5), // toId
             cursor.getString(offset + 6), // channelId
-            cursor.getString(offset + 7), // imgUrl
-            cursor.getString(offset + 8), // fromName
-            cursor.getString(offset + 9), // channalName
-            cursor.getShort(offset + 10) != 0, // fromMe
-            cursor.getShort(offset + 11) != 0 // isSended
+            cursor.getString(offset + 7), // image
+            cursor.getString(offset + 8), // from_name
+            cursor.getString(offset + 9), // channal_name
+            cursor.getShort(offset + 10) != 0, // from_me
+            cursor.getShort(offset + 11) != 0 // is_sended
         );
         return entity;
     }
@@ -128,11 +128,11 @@ public class DBMessageDao extends AbstractDao<DBMessage, Long> {
         entity.setFromId(cursor.getString(offset + 4));
         entity.setToId(cursor.getString(offset + 5));
         entity.setChannelId(cursor.getString(offset + 6));
-        entity.setImgUrl(cursor.getString(offset + 7));
-        entity.setFromName(cursor.getString(offset + 8));
-        entity.setChannalName(cursor.getString(offset + 9));
-        entity.setFromMe(cursor.getShort(offset + 10) != 0);
-        entity.setIsSended(cursor.getShort(offset + 11) != 0);
+        entity.setImage(cursor.getString(offset + 7));
+        entity.setFrom_name(cursor.getString(offset + 8));
+        entity.setChannal_name(cursor.getString(offset + 9));
+        entity.setFrom_me(cursor.getShort(offset + 10) != 0);
+        entity.setIs_sended(cursor.getShort(offset + 11) != 0);
      }
     
     /** @inheritdoc */

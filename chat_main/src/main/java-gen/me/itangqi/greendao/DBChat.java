@@ -21,9 +21,9 @@ public class DBChat {
     private String date;
     private String receive_message_date;
     /** Not-null value. */
-    private String imgUrl;
+    private String image;
     /** Not-null value. */
-    private String unReadNum;
+    private String unread_num;
 
     public DBChat() {
     }
@@ -32,7 +32,7 @@ public class DBChat {
         this.id = id;
     }
 
-    public DBChat(Long id, String my_userId, String channalId, String friend_userId, String name, String message, String date, String receive_message_date, String imgUrl, String unReadNum) {
+    public DBChat(Long id, String my_userId, String channalId, String friend_userId, String name, String message, String date, String receive_message_date, String image, String unread_num) {
         this.id = id;
         this.my_userId = my_userId;
         this.channalId = channalId;
@@ -41,8 +41,8 @@ public class DBChat {
         this.message = message;
         this.date = date;
         this.receive_message_date = receive_message_date;
-        this.imgUrl = imgUrl;
-        this.unReadNum = unReadNum;
+        this.image = image;
+        this.unread_num = unread_num;
     }
 
     public Long getId() {
@@ -122,23 +122,23 @@ public class DBChat {
     }
 
     /** Not-null value. */
-    public String getImgUrl() {
-        return imgUrl;
+    public String getImage() {
+        return image;
     }
 
     /** Not-null value; ensure this value is available before it is saved to the database. */
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
+    public void setImage(String image) {
+        this.image = image;
     }
 
     /** Not-null value. */
-    public String getUnReadNum() {
-        return unReadNum;
+    public String getUnread_num() {
+        return unread_num;
     }
 
     /** Not-null value; ensure this value is available before it is saved to the database. */
-    public void setUnReadNum(String unReadNum) {
-        this.unReadNum = unReadNum;
+    public void setUnread_num(String unread_num) {
+        this.unread_num = unread_num;
     }
 
 }

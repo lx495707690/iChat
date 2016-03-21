@@ -354,20 +354,20 @@ public class HomeActivity extends GenericFragmentActivity implements View.OnClic
             // create new chat
             if (message.getChannelId().equals(Constants.PRIVATE_CHANNEL_ID)) {
                 //private chat
-                DBChat chat = new DBChat(null,UserInfoManager.getInstance(HomeActivity.this).getClientId(),message.getChannelId(),message.getFromId(),message.getFromName(),message.getMessage(), message.getDate(), Helper.formateDate(new java.util.Date(System.currentTimeMillis()), Constants.DATE_TIME_JSON),  message.getImgUrl(),"1");
+                DBChat chat = new DBChat(null,UserInfoManager.getInstance(HomeActivity.this).getClientId(),message.getChannelId(),message.getFromId(),message.getFrom_name(),message.getMessage(), message.getDate(), Helper.formateDate(new java.util.Date(System.currentTimeMillis()), Constants.DATE_TIME_JSON),  message.getImage(),"1");
                 dbManager.saveChat(chat);
             } else {
                 //group chat
-                DBChat chat = new DBChat(null,UserInfoManager.getInstance(HomeActivity.this).getClientId(),message.getChannelId(),Constants.GROUP_USER_ID,message.getChannalName(),message.getMessage(), message.getDate(), Helper.formateDate(new java.util.Date(System.currentTimeMillis()), Constants.DATE_TIME_JSON), message.getImgUrl(),"1");
+                DBChat chat = new DBChat(null,UserInfoManager.getInstance(HomeActivity.this).getClientId(),message.getChannelId(),Constants.GROUP_USER_ID,message.getChannal_name(),message.getMessage(), message.getDate(), Helper.formateDate(new java.util.Date(System.currentTimeMillis()), Constants.DATE_TIME_JSON), message.getImage(),"1");
                 dbManager.saveChat(chat);
             }
         } else {
             //update chat: message and date;
             DBChat chat = list.get(0);
-            String unReadNum = (Integer.parseInt(chat.getUnReadNum()) + 1) + "";
+            String unReadNum = (Integer.parseInt(chat.getUnread_num()) + 1) + "";
             dbManager.updateChat(chat.getId(), chat.getChannalId(), chat.getFriend_userId(), chat.getName(),
                     message.getMessage(),
-                    message.getDate(), message.getImgUrl(),unReadNum,Helper.formateDate(new java.util.Date(System.currentTimeMillis()), Constants.DATE_TIME_JSON));
+                    message.getDate(), message.getImage(),unReadNum,Helper.formateDate(new java.util.Date(System.currentTimeMillis()), Constants.DATE_TIME_JSON));
         }
     }
 

@@ -61,8 +61,8 @@ public class SortFriendsAdapter extends BaseAdapter {
 			viewHolder.tvLetter.setVisibility(View.GONE);
 		}
 		viewHolder.tvTitle.setText(this.list.get(position).getName());
-		if(!BaseHelper.isEmpty(mFriend.getImgUrl())){
-			BaseUIHelper.loadImageWithPlaceholderResizeThumb(mContext, mFriend.getImgUrl(), viewHolder.imgAvatar, R.drawable.default_useravatar);
+		if(!BaseHelper.isEmpty(mFriend.getAvatar())){
+			BaseUIHelper.loadImageWithPlaceholderResizeThumb(mContext, mFriend.getAvatar(), viewHolder.imgAvatar, R.drawable.default_useravatar);
 		}else{
 			viewHolder.imgAvatar.setImageResource(R.drawable.default_useravatar);
 		}
