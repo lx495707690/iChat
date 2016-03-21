@@ -25,9 +25,9 @@
 
             <ImageView
                 android:id="@+id/imgAvatar"
-                android:layout_width="@dimen/img_width_mid"
-                android:layout_height="@dimen/img_height_mid"
-                android:layout_margin="@dimen/generic_margin"
+                android:layout_width="70dip"
+                android:layout_height="70dip"
+                android:padding="@dimen/generic_margin"
                 android:src="@drawable/usera" />
 
             <LinearLayout
