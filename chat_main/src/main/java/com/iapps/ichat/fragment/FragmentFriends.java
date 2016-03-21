@@ -166,7 +166,7 @@ public class FragmentFriends extends GenericFragmentiChat {
                     List<DBChat> chatList = home().getDBManager().getChat(Constants.PRIVATE_CHANNEL_ID, friend.getFriend_userId());
                     if (chatList.size() == 0) {
                         //create new chat
-                        DBChat chat = new DBChat(null,clientId,Constants.PRIVATE_CHANNEL_ID,friend.getFriend_userId(),friend.getName(),"","",Helper.formateDate(new java.util.Date(System.currentTimeMillis()),Constants.DATE_TIME_JSON),friend.getAvatar(),"0");
+                        DBChat chat = new DBChat(null,clientId,Constants.PRIVATE_CHANNEL_ID,friend.getFriend_userId(),friend.getName(),"","",friend.getAvatar(),"0");
                         dbChannelId = home().getDBManager().saveChat(chat);
                     } else {
                         dbChannelId = chatList.get(0).getId();
@@ -259,7 +259,7 @@ public class FragmentFriends extends GenericFragmentiChat {
                         String channalId = groupData.getString(Keys.ID);
                         String groupName = groupData.getString(Keys.NAME);
                         String groupAvatar = groupData.getString(Keys.USER_AVATAR);
-                        DBChat chat = new DBChat(null,clientId,channalId,Constants.GROUP_USER_ID,groupName,"","",Helper.formateDate(new java.util.Date(System.currentTimeMillis()),Constants.DATE_TIME_JSON),groupAvatar,"0");
+                        DBChat chat = new DBChat(null,clientId,channalId,Constants.GROUP_USER_ID,groupName,"","",groupAvatar,"0");
                         long dbChannelId = home().getDBManager().saveChat(chat);
                         home().popBackstack();
                         home().setFragment(new FragmentChat(dbChannelId, channalId, Constants.GROUP_USER_ID,groupName));

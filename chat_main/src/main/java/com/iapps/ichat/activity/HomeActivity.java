@@ -28,7 +28,6 @@ import com.iapps.ichat.helper.BroadcastManager;
 import com.iapps.ichat.helper.Constants;
 import com.iapps.ichat.helper.Converter;
 import com.iapps.ichat.helper.DBManager;
-import com.iapps.ichat.helper.Helper;
 import com.iapps.ichat.helper.Keys;
 import com.iapps.ichat.helper.UserInfoManager;
 import com.iapps.libs.generics.GenericFragmentActivity;
@@ -354,11 +353,11 @@ public class HomeActivity extends GenericFragmentActivity implements View.OnClic
             // create new chat
             if (message.getChannelId().equals(Constants.PRIVATE_CHANNEL_ID)) {
                 //private chat
-                DBChat chat = new DBChat(null,UserInfoManager.getInstance(HomeActivity.this).getClientId(),message.getChannelId(),message.getFromId(),message.getFrom_name(),message.getMessage(), message.getDate(), Helper.formateDate(new java.util.Date(System.currentTimeMillis()), Constants.DATE_TIME_JSON),  message.getImage(),"1");
+                DBChat chat = new DBChat(null,UserInfoManager.getInstance(HomeActivity.this).getClientId(),message.getChannelId(),message.getFromId(),message.getFrom_name(),message.getMessage(), message.getDate(),message.getImage(),"1");
                 dbManager.saveChat(chat);
             } else {
                 //group chat
-                DBChat chat = new DBChat(null,UserInfoManager.getInstance(HomeActivity.this).getClientId(),message.getChannelId(),Constants.GROUP_USER_ID,message.getChannal_name(),message.getMessage(), message.getDate(), Helper.formateDate(new java.util.Date(System.currentTimeMillis()), Constants.DATE_TIME_JSON), message.getImage(),"1");
+                DBChat chat = new DBChat(null,UserInfoManager.getInstance(HomeActivity.this).getClientId(),message.getChannelId(),Constants.GROUP_USER_ID,message.getChannal_name(),message.getMessage(), message.getDate(), message.getImage(),"1");
                 dbManager.saveChat(chat);
             }
         } else {
@@ -367,7 +366,7 @@ public class HomeActivity extends GenericFragmentActivity implements View.OnClic
             String unReadNum = (Integer.parseInt(chat.getUnread_num()) + 1) + "";
             dbManager.updateChat(chat.getId(), chat.getChannalId(), chat.getFriend_userId(), chat.getName(),
                     message.getMessage(),
-                    message.getDate(), message.getImage(),unReadNum,Helper.formateDate(new java.util.Date(System.currentTimeMillis()), Constants.DATE_TIME_JSON));
+                    message.getDate(), message.getImage(),unReadNum);
         }
     }
 

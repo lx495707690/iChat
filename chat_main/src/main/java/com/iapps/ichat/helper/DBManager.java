@@ -76,7 +76,7 @@ public class DBManager {
         if(table.equals(Constants.DB_CHAT)){
             query = getDBChatDao().queryBuilder()
                     .where(DBChatDao.Properties.My_userId.eq(UserInfoManager.getInstance(ctx).getClientId()))
-                    .orderDesc(DBChatDao.Properties.Receive_message_date)
+                    .orderDesc(DBChatDao.Properties.Date)
                     .build();
         }else if(table.equals(Constants.DB_FRIEND)){
             query = getDBFriendDao().queryBuilder()
@@ -117,8 +117,8 @@ public class DBManager {
     }
 
     //update chat
-    public void updateChat(Long id, String channelId, String userId, String name, String message, String date, String imgUrl, String unReadNum,String receiveMsgDate){
-        getDBChatDao().update(new DBChat(id,UserInfoManager.getInstance(ctx).getClientId(),channelId,userId,name,message,date,receiveMsgDate,imgUrl,unReadNum));
+    public void updateChat(Long id, String channelId, String userId, String name, String message, String date, String imgUrl, String unReadNum){
+        getDBChatDao().update(new DBChat(id,UserInfoManager.getInstance(ctx).getClientId(),channelId,userId,name,message,date,imgUrl,unReadNum));
     }
 
     //message record

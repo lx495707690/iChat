@@ -247,6 +247,6 @@ public class FragmentChat
         List<DBChat> list = home().getDBManager().getChat(channalId, friendId);
         home().getDBManager().updateChat(dbChannleId, channalId, friendId, list.get(0).getName(),
                 mBeanMessages.get(mBeanMessages.size() - 1).getMessage(),
-                mBeanMessages.get(mBeanMessages.size() - 1).getDate(), list.get(0).getImage(),"0",Helper.formateDate(new java.util.Date(System.currentTimeMillis()), Constants.DATE_TIME_JSON));
+                mBeanMessages.get(mBeanMessages.size() - 1).getDate(), list.get(0).getImage(),"0");
     }
 }

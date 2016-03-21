@@ -19,7 +19,6 @@ public class DBChat {
     private String message;
     /** Not-null value. */
     private String date;
-    private String receive_message_date;
     /** Not-null value. */
     private String image;
     /** Not-null value. */
@@ -32,7 +31,7 @@ public class DBChat {
         this.id = id;
     }
 
-    public DBChat(Long id, String my_userId, String channalId, String friend_userId, String name, String message, String date, String receive_message_date, String image, String unread_num) {
+    public DBChat(Long id, String my_userId, String channalId, String friend_userId, String name, String message, String date, String image, String unread_num) {
         this.id = id;
         this.my_userId = my_userId;
         this.channalId = channalId;
@@ -40,7 +39,6 @@ public class DBChat {
         this.name = name;
         this.message = message;
         this.date = date;
-        this.receive_message_date = receive_message_date;
         this.image = image;
         this.unread_num = unread_num;
     }
@@ -111,14 +109,6 @@ public class DBChat {
     /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setDate(String date) {
         this.date = date;
-    }
-
-    public String getReceive_message_date() {
-        return receive_message_date;
-    }
-
-    public void setReceive_message_date(String receive_message_date) {
-        this.receive_message_date = receive_message_date;
     }
 
     /** Not-null value. */

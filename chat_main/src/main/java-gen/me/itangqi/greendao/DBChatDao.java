@@ -30,9 +30,8 @@ public class DBChatDao extends AbstractDao<DBChat, Long> {
         public final static Property Name = new Property(4, String.class, "name", false, "NAME");
         public final static Property Message = new Property(5, String.class, "message", false, "MESSAGE");
         public final static Property Date = new Property(6, String.class, "date", false, "DATE");
-        public final static Property Receive_message_date = new Property(7, String.class, "receive_message_date", false, "RECEIVE_MESSAGE_DATE");
-        public final static Property Image = new Property(8, String.class, "image", false, "IMAGE");
-        public final static Property Unread_num = new Property(9, String.class, "unread_num", false, "UNREAD_NUM");
+        public final static Property Image = new Property(7, String.class, "image", false, "IMAGE");
+        public final static Property Unread_num = new Property(8, String.class, "unread_num", false, "UNREAD_NUM");
     };
 
 
@@ -55,9 +54,8 @@ public class DBChatDao extends AbstractDao<DBChat, Long> {
                 "\"NAME\" TEXT NOT NULL ," + // 4: name
                 "\"MESSAGE\" TEXT NOT NULL ," + // 5: message
                 "\"DATE\" TEXT NOT NULL ," + // 6: date
-                "\"RECEIVE_MESSAGE_DATE\" TEXT," + // 7: receive_message_date
-                "\"IMAGE\" TEXT NOT NULL ," + // 8: image
-                "\"UNREAD_NUM\" TEXT NOT NULL );"); // 9: unread_num
+                "\"IMAGE\" TEXT NOT NULL ," + // 7: image
+                "\"UNREAD_NUM\" TEXT NOT NULL );"); // 8: unread_num
     }
 
     /** Drops the underlying database table. */
@@ -81,13 +79,8 @@ public class DBChatDao extends AbstractDao<DBChat, Long> {
         stmt.bindString(5, entity.getName());
         stmt.bindString(6, entity.getMessage());
         stmt.bindString(7, entity.getDate());
- 
-        String receive_message_date = entity.getReceive_message_date();
-        if (receive_message_date != null) {
-            stmt.bindString(8, receive_message_date);
-        }
-        stmt.bindString(9, entity.getImage());
-        stmt.bindString(10, entity.getUnread_num());
+        stmt.bindString(8, entity.getImage());
+        stmt.bindString(9, entity.getUnread_num());
     }
 
     /** @inheritdoc */
@@ -107,9 +100,8 @@ public class DBChatDao extends AbstractDao<DBChat, Long> {
             cursor.getString(offset + 4), // name
             cursor.getString(offset + 5), // message
             cursor.getString(offset + 6), // date
-            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // receive_message_date
-            cursor.getString(offset + 8), // image
-            cursor.getString(offset + 9) // unread_num
+            cursor.getString(offset + 7), // image
+            cursor.getString(offset + 8) // unread_num
         );
         return entity;
     }
@@ -124,9 +116,8 @@ public class DBChatDao extends AbstractDao<DBChat, Long> {
         entity.setName(cursor.getString(offset + 4));
         entity.setMessage(cursor.getString(offset + 5));
         entity.setDate(cursor.getString(offset + 6));
-        entity.setReceive_message_date(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
-        entity.setImage(cursor.getString(offset + 8));
-        entity.setUnread_num(cursor.getString(offset + 9));
+        entity.setImage(cursor.getString(offset + 7));
+        entity.setUnread_num(cursor.getString(offset + 8));
      }
     
     /** @inheritdoc */

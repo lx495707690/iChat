@@ -79,7 +79,7 @@ public class FragmentChatList
 
 				home().getDBManager().updateChat(chat.getId(), chat.getChannalId(), chat.getFriend_userId(), chat.getName(),
 						chat.getMessage(),
-						chat.getDate(), chat.getImage(), "0",chat.getReceive_message_date());
+						chat.getDate(), chat.getImage(), "0");
 
 				home().setFragment(new FragmentChat(mChatList.get(i).getId(), mChatList.get(i).getChannalId(), mChatList.get(i).getFriend_userId(),mChatList.get(i).getName()));
 			}
