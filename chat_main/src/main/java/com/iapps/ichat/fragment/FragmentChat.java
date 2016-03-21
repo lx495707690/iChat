@@ -1,5 +1,6 @@
 package com.iapps.ichat.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -36,7 +37,7 @@ import me.itangqi.greendao.DBChat;
 import me.itangqi.greendao.DBMessage;
 import roboguice.inject.InjectView;
 
-
+@SuppressLint("ValidFragment")
 public class FragmentChat
         extends GenericFragmentiChat {
     @InjectView(R.id.lvChat)
@@ -54,6 +55,10 @@ public class FragmentChat
     private TextView tvLoading;
     private boolean loadFinished = false;
     private String chatName = "iApps";
+
+    public FragmentChat(){
+
+    }
 
     public FragmentChat(long dbChannleId, String channalId, String friendId,String chatName) {
         this.channalId = channalId;
