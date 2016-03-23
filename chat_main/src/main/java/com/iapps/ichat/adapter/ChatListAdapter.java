@@ -2,7 +2,6 @@ package com.iapps.ichat.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,17 +58,20 @@ public class ChatListAdapter
         ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
-            LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            final Context contextThemeWrapper = new ContextThemeWrapper(ctx, R.style.Theme_Themeisanagent);
-            LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
-            convertView = localInflater.inflate(R.layout.cell_chat, parent, false);
+//            LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//            final Context contextThemeWrapper = new ContextThemeWrapper(ctx, R.style.Theme_Themeisanagent);
+//            LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
+//            convertView = localInflater.inflate(R.layout.cell_chat, parent, false);
+
+            convertView = LayoutInflater.from(ctx).inflate(R.layout.cell_chat,null);
+
             holder.tvName = (TextView) convertView.findViewById(R.id.tvName);
             holder.tvMessage = (TextView) convertView.findViewById(R.id.tvMessage);
             holder.tvDate = (TextView) convertView.findViewById(R.id.tvDate);
             holder.imgAvatar = (ImageView) convertView.findViewById(R.id.imgAvatar);
 
             holder.badge = new BadgeView(ctx, holder.imgAvatar);
-            holder.badge.setBadgeBackgroundColor(ctx.getResources().getColor(R.color.cpb_red));
+            holder.badge.setBadgeBackgroundColor(ctx.getResources().getColor(R.color.Red));
             holder.badge.setTextColor(Color.WHITE);
 
             convertView.setTag(holder);

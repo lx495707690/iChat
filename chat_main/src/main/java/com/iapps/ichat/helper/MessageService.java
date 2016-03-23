@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 
 import de.tavendo.autobahn.WebSocket;
 import de.tavendo.autobahn.WebSocketConnection;
@@ -115,7 +114,7 @@ public class MessageService extends Service {
         super.onDestroy();
     }
 
-    @Nullable
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;

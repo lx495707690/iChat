@@ -16,6 +16,9 @@ public class Keys
 	public static final String USER_NAME = "username";
 	public static final String USER_AVATAR = "avatar";
 	public static final String MESSAGE = "message";
+	public static final String MSG = "msg";
+	public static final String TAG = "tag";
 	public static final String FROM_NAME = "fromName";
 	public static final String CHANNAL_NAME = "channalName";
+	public static final String PROJECT_ID = "project_id";
 }

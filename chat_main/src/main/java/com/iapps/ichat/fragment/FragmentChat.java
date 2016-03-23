@@ -114,17 +114,18 @@ public class FragmentChat
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_SEND) {
-
-                    Date date = new Date();
-                    SimpleDateFormat sdf =   new SimpleDateFormat( Constants.DATE_TIME_JSON );
-                    DBMessage dbMessage = new DBMessage(null, clientId,edtMessage.getText().toString(), sdf.format(date), clientId, friendId, channalId, UserInfoManager.getInstance(getActivity()).getAvatar(), "","",true,true);
-                    mBeanMessages.add(dbMessage);
-                    mMessageAdapter.notifyDataSetChanged();
-                    BroadcastManager.sendTxtMessage(getActivity(),edtMessage.getText().toString(), channalId, friendId);
-                    //save message
-                    home().getDBManager().saveMessage(dbMessage);
-                    edtMessage.setText("");
-                    handled = true;
+                    if(!Helper.isEmpty(edtMessage.getText().toString().trim())){
+                        Date date = new Date();
+                        SimpleDateFormat sdf =   new SimpleDateFormat( Constants.DATE_TIME_JSON );
+                        DBMessage dbMessage = new DBMessage(null, clientId,edtMessage.getText().toString().trim(), sdf.format(date), clientId, friendId, channalId, UserInfoManager.getInstance(getActivity()).getAvatar(), "","",true,true);
+                        mBeanMessages.add(dbMessage);
+                        mMessageAdapter.notifyDataSetChanged();
+                        BroadcastManager.sendTxtMessage(getActivity(),edtMessage.getText().toString(), channalId, friendId);
+                        //save message
+                        home().getDBManager().saveMessage(dbMessage);
+                        edtMessage.setText("");
+                        handled = true;
+                    }
                 }
                 return handled;
             }

@@ -54,8 +54,8 @@ public class FragmentFriends extends GenericFragmentiChat {
     @InjectView(R.id.edtName)
     private EditText edtName;
 
-    @InjectView(R.id.LLLoading)
-    private LinearLayout LLLoading;
+//    @InjectView(R.id.LLLoading)
+//    private LinearLayout LLLoading;
 
     private SortFriendsAdapter mFriendAdapter;
 

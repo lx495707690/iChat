@@ -63,4 +63,5 @@ public class BaseKeys {
 	public static final String MEDIUM_IMAGE_FOLDER = "m";
 	public static final String BIG_IMAGE_FOLDER = "b";
 	public static final String ORIGINAL_IMAGE_FOLDER = "o";
+	public static final String PLATFORM = "platform";
 }

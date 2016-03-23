@@ -1,7 +1,6 @@
 package com.iapps.ichat.adapter;
 
 import android.content.Context;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,11 +34,12 @@ public class MessageAdapter
         ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
-            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            final Context contextThemeWrapper = new ContextThemeWrapper(getContext(), R.style.Theme_Themeisanagent);
+//            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//            final Context contextThemeWrapper = new ContextThemeWrapper(getContext(), null);
             // clone the inflater using the ContextThemeWrapper
-            LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
-            convertView = localInflater.inflate(R.layout.cell_message, parent, false);
+//            LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
+//            convertView = localInflater.inflate(R.layout.cell_message, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.cell_message,null);
             holder.llReceivedMsg = (LinearLayout) convertView.findViewById(R.id.llReceivedMsg);
             holder.llSendedMsg = (LinearLayout) convertView.findViewById(R.id.llSendedMsg);
             holder.tvReceivedMsg = (TextView) convertView.findViewById(R.id.tvReceivedMsg);

@@ -20,7 +20,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.iapps.ichat.R;
+import com.iapps.ichat.fragment.FragmentChat;
 import com.iapps.ichat.fragment.FragmentChatList;
 import com.iapps.ichat.fragment.FragmentFriends;
 import com.iapps.ichat.fragment.FragmentProfile;
@@ -28,12 +31,15 @@ import com.iapps.ichat.helper.BroadcastManager;
 import com.iapps.ichat.helper.Constants;
 import com.iapps.ichat.helper.Converter;
 import com.iapps.ichat.helper.DBManager;
+import com.iapps.ichat.helper.Helper;
 import com.iapps.ichat.helper.Keys;
+import com.iapps.ichat.helper.RegistrationIntentService;
 import com.iapps.ichat.helper.UserInfoManager;
 import com.iapps.libs.generics.GenericFragmentActivity;
 import com.iapps.libs.helpers.BaseUIHelper;
 import com.iapps.libs.objects.SimpleBean;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -45,6 +51,8 @@ import roboguice.inject.InjectView;
 
 
 public class HomeActivity extends GenericFragmentActivity implements View.OnClickListener {
+
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     private ArrayList<? extends SimpleBean> mResults = new ArrayList<SimpleBean>();
     private boolean isResultChanged;
@@ -75,7 +83,35 @@ public class HomeActivity extends GenericFragmentActivity implements View.OnClic
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+//        if (checkPlayServices()) {
+            // Start IntentService to register this application with GCM.
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+//        }
+
         init();
+    }
+
+    private void handleNotification(){
+        Intent i = getIntent();
+        if(i != null){
+            String tag = i.getStringExtra(Keys.TAG);
+            if(Helper.isEmpty(tag)){
+                return;
+            }
+            try {
+                JSONObject j = new JSONObject(tag);
+                List<DBChat> mChatList = dbManager.getChat(j.getString(Keys.CHANNAL),j.getString(Keys.FROM));
+                //enter into chat fragment
+                clearFragment();
+                setFragment(new FragmentChatList());
+                setFragment(new FragmentChat(mChatList.get(0).getId(), mChatList.get(0).getChannalId(), mChatList.get(0).getFriend_userId(),mChatList.get(0).getName()));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void init() {
@@ -102,6 +138,26 @@ public class HomeActivity extends GenericFragmentActivity implements View.OnClic
 
         //get offline message
         BroadcastManager.sendGetOffLineMessage(HomeActivity.this);
+    }
+
+    /**
+     * Check the device to make sure it has the Google Play Services APK. If
+     * it doesn't, display a dialog that allows users to download the APK from
+     * the Google Play Store or enable it in the device's system settings.
+     */
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                finish();
+            }
+            return false;
+        }
+        return true;
     }
 
     public void changeTabBar(int position) {
@@ -315,30 +371,34 @@ public class HomeActivity extends GenericFragmentActivity implements View.OnClic
                     //off line message
                     List<DBMessage> messages = Converter.toListTxtMessage(data, clientId, false, true);
                     for (int i = 0; i < messages.size(); i++){
-                        //create or update chat data
-                        updateChatData(messages.get(i));
-                        //save message
-                        dbManager.saveMessage(messages.get(i));
+                        handleMessage(messages.get(i));
                     }
 
                     messageListener.onReceive(json.getString(Keys.CMD), data);
+
+                    //handle notification
+                    handleNotification();
+
                 }  else if (json.getString(Keys.CMD).equals(Constants.CMD_FROMMESSAGE)) {
                     // receive message
                     DBMessage message = Converter.toTxtMessage(data, clientId, false, true);
 
-                    //create or update chat data
-                    updateChatData(message);
-
-                    //save meesage
-                    dbManager.saveMessage(message);
+                    handleMessage(message);
                     messageListener.onReceive(json.getString(Keys.CMD),data);
                 } else{
                     messageListener.onReceive(json.getString(Keys.CMD),data);
                 }
             } catch (Exception e) {
-                Toast.makeText(HomeActivity.this, e.getMessage().toString(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(HomeActivity.this, e.getMessage().toString(), Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void handleMessage(DBMessage message){
+        //create or update chat data
+        updateChatData(message);
+        //save message
+        dbManager.saveMessage(message);
     }
 
     private void updateChatData(DBMessage message) {
@@ -420,6 +480,7 @@ public class HomeActivity extends GenericFragmentActivity implements View.OnClic
     @Override
     protected void onResume() {
         super.onResume();
+
         if (!isActive) {
             isActive = true;
             dialog.show();

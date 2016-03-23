@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/White">
 
     <EditText
         android:id="@+id/edtName"
@@ -13,14 +13,14 @@
         />
 
 
-    <com.iapps.libs.views.LoadingCompound
-        android:id="@+id/LLLoading"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/transparent_grey"
-        android:clickable="true"
-        android:visibility="gone" >
-    </com.iapps.libs.views.LoadingCompound>
+    <!--<com.iapps.libs.views.LoadingCompound-->
+        <!--android:id="@+id/LLLoading"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@color/transparent_grey"-->
+        <!--android:clickable="true"-->
+        <!--android:visibility="gone" >-->
+    <!--</com.iapps.libs.views.LoadingCompound>-->
 
     <FrameLayout
         android:layout_width="fill_parent"
@@ -58,7 +58,7 @@
             android:layout_width="80.0dip"
             android:layout_height="80.0dip"
             android:layout_gravity="center"
-            android:background="@color/white"
+            android:background="@color/White"
             android:gravity="center"
             android:textColor="@color/Black"
             android:textSize="30.0dip"

@@ -20,40 +20,44 @@ android {
 
 repositories {
     mavenCentral()
-    maven(){
+    maven() {
         url "https://oss.sonatype.org/content/repositories/snapshots"
     }
 }
 
 dependencies {
+    compile project(':ichat_actionbarsherlock_lib')
+//    compile project(':ichat_styles_lib')
+//    compile project(':ichat_material_ripple_lib')
+
 //  compile project(':isan_actionbarsherlock_lib')
 //    compile project(':isan_styles_lib')
 //    compile project(':isan_betterpickers_lib')
-    compile project(':ichat_datetimepicker_lib')
+//    compile project(':ichat_datetimepicker_lib')
 //  compile files('libs/calligraphy-0.6.0.jar')
-    compile ('uk.co.chrisjenx:calligraphy:2.1.0'){
-        exclude module: 'support-v4'
-        exclude group: 'com.android.support', module: 'appcompat-v7'
-    }
-    compile 'com.github.navasmdc:MaterialDesign:1.5@aar'
+//    compile('uk.co.chrisjenx:calligraphy:2.1.0') {
+//        exclude module: 'support-v4'
+//        exclude group: 'com.android.support', module: 'appcompat-v7'
+//    }
+//    compile 'com.github.navasmdc:MaterialDesign:1.5@aar'
     compile files('libs/commons-codec-1.10.jar')
     compile files('libs/commons-io-2.4.jar')
     compile files('libs/commons-validator-1.4.0.jar')
-    compile files('libs/gcm-src.jar')
-    compile files('libs/gcm.jar')
-    compile files('libs/cwac-layouts-0.4.2.jar')
-    compile ('com.google.android.gms:play-services-base:7.5.0'){
-        exclude module: 'support-v4'
-    }
-    compile ('com.google.android.gms:play-services-location:7.5.0'){
-        exclude module: 'support-v4'
-    }
-    compile ('com.google.android.gms:play-services-maps:7.5.0'){
-        exclude module: 'support-v4'
-    }
-//  compile ('com.google.android.gms:play-services-analytics:7.5.0'){
+//    compile files('libs/gcm-src.jar')
+//    compile files('libs/gcm.jar')
+//    compile files('libs/cwac-layouts-0.4.2.jar')
+//    compile('com.google.android.gms:play-services-base:7.5.0') {
 //        exclude module: 'support-v4'
-//  }
+//    }
+//    compile('com.google.android.gms:play-services-location:7.5.0') {
+//        exclude module: 'support-v4'
+//    }
+//    compile('com.google.android.gms:play-services-maps:7.5.0') {
+//        exclude module: 'support-v4'
+//    }
+
+
+
     compile files('libs/guice-3.0-no_aop.jar')
     compile files('libs/javax.inject-1.jar')
     compile files('libs/joda-time-2.2.jar')

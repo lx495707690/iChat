@@ -29,9 +29,6 @@ import com.iapps.ichat.helper.MessageService;
 import com.iapps.ichat.helper.UserInfoManager;
 import com.iapps.libs.generics.GenericFragmentActivity;
 import com.iapps.libs.helpers.BaseUIHelper;
-import com.throrinstudio.android.common.libs.validator.Form;
-import com.throrinstudio.android.common.libs.validator.Validate;
-import com.throrinstudio.android.common.libs.validator.validator.NotEmptyValidator;
 
 import org.json.JSONObject;
 
@@ -76,21 +73,21 @@ public class LoginActivity extends GenericFragmentActivity {
             @Override
             public void onClick(View view) {
 
-                Validate field1 = new Validate(edtAccount);
-                field1.addValidator(new NotEmptyValidator(LoginActivity.this));
-
-                Validate field2 = new Validate(edtPwd);
-                field2.addValidator(new NotEmptyValidator(LoginActivity.this));
-
-                Form mForm = new Form();
-                mForm.addValidates(field1);
-                mForm.addValidates(field2);
-
-                if (mForm.validate()) {
-                    //send login cmd
+//                Validate field1 = new Validate(edtAccount);
+//                field1.addValidator(new NotEmptyValidator(LoginActivity.this));
+//
+//                Validate field2 = new Validate(edtPwd);
+//                field2.addValidator(new NotEmptyValidator(LoginActivity.this));
+//
+//                Form mForm = new Form();
+//                mForm.addValidates(field1);
+//                mForm.addValidates(field2);
+//
+//                if (mForm.validate()) {
+//                    //send login cmd
                     BroadcastManager.sendLoginMessage(LoginActivity.this,edtAccount.getText().toString(), edtPwd.getText().toString(),mSelectedAvatar);
                     dialog.show();
-                }
+//                }
             }
         });
 

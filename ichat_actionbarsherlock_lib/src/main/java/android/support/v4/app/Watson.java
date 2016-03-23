@@ -47,19 +47,19 @@ public abstract class Watson extends FragmentActivity implements OnCreatePanelMe
             MenuInflater inflater = getSupportMenuInflater();
             boolean show = false;
             ArrayList<Fragment> newMenus = null;
-            if (mFragments.mAdded != null) {
-                for (int i = 0; i < mFragments.mAdded.size(); i++) {
-                    Fragment f = mFragments.mAdded.get(i);
-                    if (f != null && !f.mHidden && f.mHasMenu && f.mMenuVisible && f instanceof OnCreateOptionsMenuListener) {
-                        show = true;
-                        ((OnCreateOptionsMenuListener)f).onCreateOptionsMenu(menu, inflater);
-                        if (newMenus == null) {
-                            newMenus = new ArrayList<Fragment>();
-                        }
-                        newMenus.add(f);
-                    }
-                }
-            }
+//            if (mFragments.mAdded != null) {
+//                for (int i = 0; i < mFragments.mAdded.size(); i++) {
+//                    Fragment f = mFragments.mAdded.get(i);
+//                    if (f != null && !f.mHidden && f.mHasMenu && f.mMenuVisible && f instanceof OnCreateOptionsMenuListener) {
+//                        show = true;
+//                        ((OnCreateOptionsMenuListener)f).onCreateOptionsMenu(menu, inflater);
+//                        if (newMenus == null) {
+//                            newMenus = new ArrayList<Fragment>();
+//                        }
+//                        newMenus.add(f);
+//                    }
+//                }
+//            }
 
             if (mCreatedMenus != null) {
                 for (int i = 0; i < mCreatedMenus.size(); i++) {
@@ -90,15 +90,15 @@ public abstract class Watson extends FragmentActivity implements OnCreatePanelMe
             if (ActionBarSherlock.DEBUG) Log.d(TAG, "[onPreparePanel] activity prepare result: " + result);
 
             boolean show = false;
-            if (mFragments.mAdded != null) {
-                for (int i = 0; i < mFragments.mAdded.size(); i++) {
-                    Fragment f = mFragments.mAdded.get(i);
-                    if (f != null && !f.mHidden && f.mHasMenu && f.mMenuVisible && f instanceof OnPrepareOptionsMenuListener) {
-                        show = true;
-                        ((OnPrepareOptionsMenuListener)f).onPrepareOptionsMenu(menu);
-                    }
-                }
-            }
+//            if (mFragments.mAdded != null) {
+//                for (int i = 0; i < mFragments.mAdded.size(); i++) {
+//                    Fragment f = mFragments.mAdded.get(i);
+//                    if (f != null && !f.mHidden && f.mHasMenu && f.mMenuVisible && f instanceof OnPrepareOptionsMenuListener) {
+//                        show = true;
+//                        ((OnPrepareOptionsMenuListener)f).onPrepareOptionsMenu(menu);
+//                    }
+//                }
+//            }
 
             if (ActionBarSherlock.DEBUG) Log.d(TAG, "[onPreparePanel] fragments prepare result: " + show);
             result |= show;
@@ -119,16 +119,16 @@ public abstract class Watson extends FragmentActivity implements OnCreatePanelMe
                 return true;
             }
 
-            if (mFragments.mAdded != null) {
-                for (int i = 0; i < mFragments.mAdded.size(); i++) {
-                    Fragment f = mFragments.mAdded.get(i);
-                    if (f != null && !f.mHidden && f.mHasMenu && f.mMenuVisible && f instanceof OnOptionsItemSelectedListener) {
-                        if (((OnOptionsItemSelectedListener)f).onOptionsItemSelected(item)) {
-                            return true;
-                        }
-                    }
-                }
-            }
+//            if (mFragments.mAdded != null) {
+//                for (int i = 0; i < mFragments.mAdded.size(); i++) {
+//                    Fragment f = mFragments.mAdded.get(i);
+//                    if (f != null && !f.mHidden && f.mHasMenu && f.mMenuVisible && f instanceof OnOptionsItemSelectedListener) {
+//                        if (((OnOptionsItemSelectedListener)f).onOptionsItemSelected(item)) {
+//                            return true;
+//                        }
+//                    }
+//                }
+//            }
         }
         return false;
     }

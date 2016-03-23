@@ -14,11 +14,11 @@
         android:visibility="visible" >
 
 
-        <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
-            android:id="@+id/progressBarLoadingCompound"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:background="@color/yellowisan" />
+        <!--<com.gc.materialdesign.views.ProgressBarCircularIndeterminate-->
+            <!--android:id="@+id/progressBarLoadingCompound"-->
+            <!--android:layout_width="42dp"-->
+            <!--android:layout_height="42dp"-->
+            <!--android:background="@color/yellowisan" />-->
 
         <TextView
             android:id="@+id/textViewLoadingMessage"

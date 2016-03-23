@@ -40,7 +40,7 @@ public class FragmentContacts extends GenericFragmentiChat {
 	@InjectView(R.id.title_layout_catalog)
 	private TextView title;
 
-	@InjectView(R.id.LLLoading) private LinearLayout LLLoading;
+//	@InjectView(R.id.LLLoading) private LinearLayout LLLoading;
 
 	private SortContactsAdapter mContactAdapter;
 
@@ -235,12 +235,12 @@ public class FragmentContacts extends GenericFragmentiChat {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			LLLoading.setVisibility(View.VISIBLE);
+//			LLLoading.setVisibility(View.VISIBLE);
 		}
 
 		@Override
 		public void onPostExecute(ArrayList<BeanContact> contacts){
-			LLLoading.setVisibility(View.GONE);
+//			LLLoading.setVisibility(View.GONE);
 			if(contacts != null){
 				mSourceDataList = contacts;
 				filledData();

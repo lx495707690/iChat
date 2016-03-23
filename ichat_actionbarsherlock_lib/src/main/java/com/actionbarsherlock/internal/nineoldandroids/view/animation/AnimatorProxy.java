@@ -1,14 +1,14 @@
 package com.actionbarsherlock.internal.nineoldandroids.view.animation;
 
-import java.lang.ref.WeakReference;
-import java.util.WeakHashMap;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.os.Build;
-import android.util.FloatMath;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+
+import java.lang.ref.WeakReference;
+import java.util.WeakHashMap;
 
 public final class AnimatorProxy extends Animation {
     public static final boolean NEEDS_PROXY = Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB;
@@ -146,11 +146,11 @@ public final class AnimatorProxy extends Animation {
         computeRect(after, view);
         after.union(mBefore);
 
-        parent.invalidate(
-                (int) FloatMath.floor(after.left),
-                (int) FloatMath.floor(after.top),
-                (int) FloatMath.ceil(after.right),
-                (int) FloatMath.ceil(after.bottom));
+//        parent.invalidate(
+//                (int) FloatMath.floor(after.left),
+//                (int) FloatMath.floor(after.top),
+//                (int) FloatMath.ceil(after.right),
+//                (int) FloatMath.ceil(after.bottom));
     }
 
     private void computeRect(final RectF r, View view) {
