@@ -78,7 +78,7 @@ public class FragmentChat
         super.onViewCreated(view, savedInstanceState);
         setHasOptionsMenu(true);
         home().setActionBar(chatName);
-        home().enableHomeUp();
+//        home().enableHomeUp();
         home().hideBottomBar();
 
         if (mMessageAdapter == null) {

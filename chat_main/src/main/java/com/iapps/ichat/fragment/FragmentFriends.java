@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -53,6 +54,8 @@ public class FragmentFriends extends GenericFragmentiChat {
     private TextView title;
     @InjectView(R.id.edtName)
     private EditText edtName;
+    @InjectView(R.id.btnCreateGroup)
+    private Button btnCreateGroup;
 
 //    @InjectView(R.id.LLLoading)
 //    private LinearLayout LLLoading;
@@ -79,10 +82,11 @@ public class FragmentFriends extends GenericFragmentiChat {
         super.onViewCreated(view, savedInstanceState);
 
         if (selectFriend) {
-            setHasOptionsMenu(true);
-            home().hideBottomBar();
+//            setHasOptionsMenu(true);
+//            home().hideBottomBar();
             edtName.setVisibility(View.VISIBLE);
-            home().enableHomeUp();
+//            home().enableHomeUp();
+            btnCreateGroup.setText("Submit");
         }else{
             setHasOptionsMenu(false);
             home().showBottomBar();
@@ -137,6 +141,45 @@ public class FragmentFriends extends GenericFragmentiChat {
     }
 
     private void initView() {
+
+        btnCreateGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(selectFriend){
+                    //create group.
+                    String groupName = edtName.getText().toString().trim();
+                    if(Helper.isEmpty(groupName)){
+                        Toast.makeText(getActivity(),"Please input the group name.",Toast.LENGTH_SHORT).show();
+                    }
+
+                    String inviteUsers = clientId;
+                    for (int i = 0; i < mSourceDataList.size();i++){
+                        if(mSourceDataList.get(i).getIsSelected()){
+                            if(Helper.isEmpty(inviteUsers)){
+                                inviteUsers = mSourceDataList.get(i).getFriend_userId();
+                            }else{
+                                inviteUsers += "," + mSourceDataList.get(i).getFriend_userId();
+                            }
+
+                            mSourceDataList.get(i).setIsSelected(false);
+                        }
+                    }
+
+                    if(Helper.isEmpty(inviteUsers)){
+                        Toast.makeText(getActivity(),"Please select one friend at least.",Toast.LENGTH_SHORT).show();
+                    }
+                    BroadcastManager.sendCreateGroupMessage(getActivity(),groupName,"",inviteUsers);
+                    dialog.show();
+                }else{
+                    FragmentFriends f = new FragmentFriends();
+                    f.setSelectFriend(true);
+                    home().setFragment(f);
+                }
+
+
+            }
+        });
 
         dialog = new ProgressDialog(getActivity());
         dialog.setMessage(getResources().getString(R.string.loading));
@@ -256,6 +299,7 @@ public class FragmentFriends extends GenericFragmentiChat {
 
 
                     } else if (cmd.equals(Constants.CMD_CREATE_GROUP) && json.getInt(Keys.STATUS_CODE) == Constants.CREATE_GROUP_SUCCESSFULLY) {
+//                        selectFriend = false;
                         //create group successfully.
                         JSONObject groupData = json.getJSONObject(Keys.DATA);
                         String channalId = groupData.getString(Keys.ID);

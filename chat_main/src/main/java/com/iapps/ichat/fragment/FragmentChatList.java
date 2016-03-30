@@ -34,9 +34,7 @@ public class FragmentChatList
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		setHasOptionsMenu(true);
 		return inflater.inflate(R.layout.fragment_chat_list, container, false);
-
 	}
 
 	@Override
@@ -56,6 +54,12 @@ public class FragmentChatList
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
 	}
 
 	@Override
